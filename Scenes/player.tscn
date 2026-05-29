@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bk1uodsc1e6wi"]
+
+[ext_resource type="Script" uid="uid://c0ovey37bjhrh" path="res://Scripts/Player.cs" id="1_v0iea"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_v0iea"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f60y1"]
+
+[node name="Player" type="CharacterBody2D" unique_id=620961136]
+script = ExtResource("1_v0iea")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1062378741]
+scale = Vector2(18, 18)
+texture = SubResource("CanvasTexture_v0iea")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=841725884]
+shape = SubResource("CapsuleShape2D_f60y1")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=911760157]
+zoom = Vector2(2, 2)
+
+[node name="Score" type="Label" parent="." unique_id=692102093]
+offset_left = 215.0
+offset_top = -161.0
+offset_right = 288.0
+offset_bottom = -135.0
+text = "Score: "
+horizontal_alignment = 1
+vertical_alignment = 1
