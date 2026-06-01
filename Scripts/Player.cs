@@ -1,55 +1,85 @@
 using Godot;
 using System;
 
-public partial class Player : CharacterBody2D
+public partial class Player : CharacterBody3D
 {
-	public const float Speed = 300.0f;
-	public const float JumpVelocity = -400.0f;
-	public int score = 0;
-	private Label scoreLabel;
-	
-	public override void _Ready()
+	enum MovementState {Idle, Walking, Turning}
+	private MovementState _CurrentState = MovementState.Idle;
+
+	[Export]
+	private float _TurnSpeed = 50.0f;
+	private float _WalkSpeed = 10.0f;
+	private float _RunSpeed = 50.0f;
+
+	private bool _IsMoving;
+	private bool _IsTurning;
+
+	private Label ScoreLabel;
+	private int Score = 0;
+
+public override void _Ready()
 	{
-	scoreLabel = GetNode<Label>("Score");
+		ScoreLabel = GetNode<Label>("ScoreLabel");
 	}
-	
-	public override void _PhysicsProcess(double delta)
+public void UpdateState()
 	{
-		Vector2 velocity = Velocity;
-		scoreLabel.Text = "Score: " + score.ToString();
-		
-		// Add the gravity.
-		if (!IsOnFloor())
+		if (Input.IsActionPressed("Move_Forward") || Input.IsActionPressed("Move_Backward"))
 		{
-			velocity += GetGravity() * (float)delta;
+			_CurrentState = MovementState.Walking;
+		}
+		else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
+		{
+			_CurrentState = MovementState.Turning;
 		}
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		{
-		velocity.Y = JumpVelocity;
-		score += 1;
-		}
-
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
-		{
-			velocity.X = direction.X * Speed;
-		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+			_CurrentState = MovementState.Idle;	
 		}
-
-		Velocity = velocity;
-		MoveAndSlide();
-		
+        
 	}
-	
-	public void TakeDamage()
+	private void HandleTurning(float delta)
 	{
-		GD.Print("Hurty");
+		float turnDirection = Input.GetAxis("Turn_Right", "Turn_Left");
+		RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y + (turnDirection * _TurnSpeed * delta), RotationDegrees.Z);
+	}
+	private void HandleForward()
+	{
+		float forwardDirection = Input.GetAxis("Move_Forward","Move_Backward");
+		float walk_velocity = forwardDirection * _WalkSpeed;
+		Velocity = Transform.Basis.Z * walk_velocity;
+	
+	}
+    public override void _Process(double delta)
+    {
+        ScoreLabel.Text = "Score: " + Score.ToString();
+		
+    }
+
+	public override void _PhysicsProcess(double delta)
+	{
+		
+		UpdateState();
+        switch (_CurrentState)
+
+        {
+            case MovementState.Walking:
+                HandleForward();
+				GD.Print("Walking");
+                break;
+
+            case MovementState.Turning:
+                HandleTurning((float)delta);
+				 Velocity = Vector3.Zero;
+				GD.Print("Turning");
+                break;
+
+            case MovementState.Idle:
+                Velocity = Vector3.Zero;
+				GD.Print("Idle");
+                break;
+        }
+
+        MoveAndSlide();
 	}
 }
