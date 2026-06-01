@@ -50,6 +50,6 @@ public partial class Player : CharacterBody2D
 	
 	public void TakeDamage()
 	{
-		GD.print("Hurty")
+		GD.Print("Hurty");
 	}
 }
