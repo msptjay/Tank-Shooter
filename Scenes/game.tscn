@@ -16,6 +16,10 @@ material = SubResource("StandardMaterial3D_gl6un")
 
 [node name="Game" type="Node3D" unique_id=1309208773]
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=186313271]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 33, 0)
+shadow_enabled = true
+
 [node name="Floor" type="CharacterBody3D" parent="." unique_id=1102048614]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
@@ -25,13 +29,6 @@ shape = SubResource("BoxShape3D_cg2ps")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1333943128]
 transform = Transform3D(60, 0, 0, 0, 2, 0, 0, 0, 60, 0, 0, 0)
 mesh = SubResource("BoxMesh_iukft")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=186313271]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 33, 0)
-shadow_enabled = true
-
-[node name="Player" parent="." unique_id=546780480 instance=ExtResource("1_iukft")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0)
 
 [node name="Block" type="CharacterBody3D" parent="." unique_id=1470121866]
 
@@ -43,3 +40,6 @@ debug_color = Color(0.9023814, 0.18313643, 0.62121636, 0.41960785)
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Block" unique_id=655778697]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -13)
 mesh = SubResource("BoxMesh_j5yw3")
+
+[node name="Player" parent="." unique_id=546780480 instance=ExtResource("1_iukft")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0)
