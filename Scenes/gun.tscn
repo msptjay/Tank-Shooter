@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://xbk4lvp3g23s"]
+
+[ext_resource type="Script" uid="uid://blclcjclr71q2" path="res://Gun.cs" id="1_nxj5y"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3dt2y"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_nxj5y"]
+
+[node name="Gun" type="CharacterBody3D" unique_id=1335957254]
+script = ExtResource("1_nxj5y")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1007790142]
+shape = SubResource("BoxShape3D_3dt2y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1123693695]
+mesh = SubResource("BoxMesh_nxj5y")
+
+[node name="Barrel" type="Node" parent="." unique_id=28789758]

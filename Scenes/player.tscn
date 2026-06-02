@@ -19,8 +19,15 @@ mesh = SubResource("CapsuleMesh_rpqav")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6073588, 0.28049552, 1.791513)
 
 [node name="ScoreLabel" type="Label" parent="." unique_id=1674434337]
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 169.0
-offset_bottom = 83.0
+offset_left = 6.0
+offset_top = 3.0
+offset_right = 173.0
+offset_bottom = 84.0
 text = "Score: "
+
+[node name="StaminaLabel" type="Label" parent="." unique_id=942282003]
+offset_left = 1.0
+offset_top = 36.0
+offset_right = 134.0
+offset_bottom = 83.0
+text = "Stamina:"

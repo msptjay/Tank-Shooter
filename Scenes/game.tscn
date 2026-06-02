@@ -2,44 +2,19 @@
 
 [ext_resource type="PackedScene" uid="uid://1uqialc1lg8a" path="res://Scenes/Player.tscn" id="1_iukft"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_cg2ps"]
-size = Vector3(60, 2, 60)
-
-[sub_resource type="BoxMesh" id="BoxMesh_iukft"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_iukft"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gl6un"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_j5yw3"]
-material = SubResource("StandardMaterial3D_gl6un")
-
 [node name="Game" type="Node3D" unique_id=1309208773]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=186313271]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 33, 0)
-shadow_enabled = true
-
-[node name="Floor" type="CharacterBody3D" parent="." unique_id=1102048614]
+[node name="Floor" type="CSGBox3D" parent="." unique_id=310364411]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+size = Vector3(25, 2, 25)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=2145097775]
-shape = SubResource("BoxShape3D_cg2ps")
+[node name="Floor" type="CSGBox3D" parent="Floor" unique_id=741502881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+size = Vector3(25, 2, 25)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1333943128]
-transform = Transform3D(60, 0, 0, 0, 2, 0, 0, 0, 60, 0, 0, 0)
-mesh = SubResource("BoxMesh_iukft")
-
-[node name="Block" type="CharacterBody3D" parent="." unique_id=1470121866]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Block" unique_id=1455941927]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
-shape = SubResource("BoxShape3D_iukft")
-debug_color = Color(0.9023814, 0.18313643, 0.62121636, 0.41960785)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Block" unique_id=655778697]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -13)
-mesh = SubResource("BoxMesh_j5yw3")
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=186313271]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3, 0)
+shadow_enabled = true
 
 [node name="Player" parent="." unique_id=546780480 instance=ExtResource("1_iukft")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0)
