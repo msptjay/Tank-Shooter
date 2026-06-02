@@ -40,6 +40,7 @@ public override void _Ready()
 		HealthBar = GetNode<ProgressBar>("HealthBar");
 		_Stamina = _MaxStamina;
 		_Health = _MaxHealth;
+		HealthBar.Value = (float)_Health / _MaxHealth * 100;
 	}
 public void UpdateState()
 	{

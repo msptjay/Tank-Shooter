@@ -18,22 +18,14 @@ mesh = SubResource("CapsuleMesh_rpqav")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=469148521]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6073588, 0.28049552, 1.791513)
 
-[node name="ScoreLabel" type="Label" parent="." unique_id=1674434337]
-offset_left = 6.0
-offset_top = 3.0
-offset_right = 173.0
-offset_bottom = 84.0
-text = "Score: "
-
-[node name="StaminaLabel" type="Label" parent="." unique_id=942282003]
-offset_left = 1.0
-offset_top = 36.0
-offset_right = 134.0
-offset_bottom = 83.0
-text = "Stamina:"
-
 [node name="StaminaBar" type="ProgressBar" parent="." unique_id=249002327]
 offset_left = 8.0
 offset_top = 68.0
 offset_right = 189.0
 offset_bottom = 102.0
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1803718603]
+offset_left = 4.0
+offset_top = 21.0
+offset_right = 192.0
+offset_bottom = 59.0
