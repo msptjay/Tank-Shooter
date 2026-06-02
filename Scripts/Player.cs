@@ -23,21 +23,23 @@ public partial class Player : CharacterBody3D
 	[Export]
 	private bool _Exhaustion = false;
 
+	private int _Health;
+	private int _MaxHealth = 100;
+
 	[ExportGroup("Move Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
-	private Label ScoreLabel;
-	private Label StaminaLabel;
 	private ProgressBar StaminaBar;
+	private ProgressBar HealthBar;
 	private int Score = 0;
 	
 public override void _Ready()
 	{
 		// Grabs a referance for the labels that are children to the player node
-		ScoreLabel = GetNode<Label>("ScoreLabel"); 
-		StaminaLabel = GetNode<Label>("StaminaLabel");
 		StaminaBar = GetNode<ProgressBar>("StaminaBar");
+		HealthBar = GetNode<ProgressBar>("HealthBar");
 		_Stamina = _MaxStamina;
+		_Health = _MaxHealth;
 	}
 public void UpdateState()
 	{
@@ -102,10 +104,19 @@ public void UpdateState()
 			}
 		}
 	}
+	private void TakeDamage(int damage)
+	{
+		_Health -= damage;
+		if (_Health <= 0)
+		{
+			_Health = 0;
+			GD.Print("Player is dead!");
+			// You can add additional logic here for when the player dies, such as respawning or ending the game.
+		}
+		HealthBar.Value = (float)_Health / _MaxHealth * 100;
+	}
     public override void _Process(double delta)
     {
-        ScoreLabel.Text = "Score: " + Score.ToString();
-		StaminaLabel.Text = "Stamina: " + ((int)_Stamina).ToString();
 		StaminaBar.Value = _Stamina / _MaxStamina * 100;
 		if (_CurrentState != MovementState.Running)
 		{
