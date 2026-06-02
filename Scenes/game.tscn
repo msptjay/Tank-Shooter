@@ -4,12 +4,12 @@
 
 [node name="Game" type="Node3D" unique_id=1309208773]
 
-[node name="Floor" type="CSGBox3D" parent="." unique_id=310364411]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+[node name="Ceiling" type="CSGBox3D" parent="." unique_id=741502881]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
 size = Vector3(25, 2, 25)
 
-[node name="Floor" type="CSGBox3D" parent="Floor" unique_id=741502881]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+[node name="Floor" type="CSGBox3D" parent="." unique_id=310364411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 size = Vector3(25, 2, 25)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=186313271]

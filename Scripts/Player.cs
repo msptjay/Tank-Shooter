@@ -29,6 +29,8 @@ public partial class Player : CharacterBody3D
 	[ExportGroup("Move Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
+	private bool _Flipped = false;
+	private float _flipCooldown = 3.0f;
 	private ProgressBar StaminaBar;
 	private ProgressBar HealthBar;
 	private int Score = 0;
@@ -53,9 +55,8 @@ public void UpdateState()
 		{
 			_CurrentState = MovementState.Walking;
 
-			if (Input.IsActionPressed("Flip"))
+			if (Input.IsActionPressed("Move_Backward") && _CurrentState == MovementState.Walking && Input.IsActionPressed("Flip") && !_Flipped)
 			{
-				_CurrentState = MovementState.Walking;
 				HandleFlip();
 			}
 		}
@@ -90,7 +91,9 @@ public void UpdateState()
 	}
 	private void HandleFlip()
 	{
-		
+		RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y + 180.0f, RotationDegrees.Z);
+		_Flipped = true;
+
 	}
 
 	private void StaminaDrain(float delta)
@@ -137,6 +140,16 @@ public void UpdateState()
 		{
 			StaminaDrain((float)delta);
 			
+		}
+		if(_Flipped)
+		{
+			_flipCooldown -= (float)delta;
+			if (_flipCooldown <= 0)
+			{
+				_Flipped = false;
+				_flipCooldown = 3.0f;
+				GD.Print("Flip ready!");
+			}
 		}
     }
 
