@@ -1,18 +1,21 @@
 [gd_scene format=3 uid="uid://xbk4lvp3g23s"]
 
 [ext_resource type="Script" uid="uid://blclcjclr71q2" path="res://Scripts/Gun.cs" id="1_nxj5y"]
+[ext_resource type="PackedScene" uid="uid://ddmky1sh38ncy" path="res://Assets/Shitty Pistol.glb" id="2_oqrbh"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_3dt2y"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_nxj5y"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_t6ynv"]
 
 [node name="Gun" type="CharacterBody3D" unique_id=1335957254]
 script = ExtResource("1_nxj5y")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1007790142]
-shape = SubResource("BoxShape3D_3dt2y")
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -1.9934063, 0.2099042, -6.241023)
+shape = SubResource("CylinderShape3D_t6ynv")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1123693695]
-mesh = SubResource("BoxMesh_nxj5y")
+[node name="Shitty Pistol" parent="." unique_id=314572272 instance=ExtResource("2_oqrbh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0474682, 1.1920929e-07, -6.3366365)
 
-[node name="Barrel" type="Node" parent="." unique_id=28789758]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shitty Pistol" unique_id=1123693695]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0474682, -1.1920929e-07, 6.3366365)
+
+[editable path="Shitty Pistol"]
