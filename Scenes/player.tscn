@@ -8,6 +8,7 @@
 
 [node name="Player" type="CharacterBody3D" unique_id=546780480]
 script = ExtResource("1_hr86y")
+_StaminaRegenRate = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=208472553]
 shape = SubResource("CapsuleShape3D_fn5od")
@@ -31,3 +32,9 @@ offset_top = 36.0
 offset_right = 134.0
 offset_bottom = 83.0
 text = "Stamina:"
+
+[node name="StaminaBar" type="ProgressBar" parent="." unique_id=249002327]
+offset_left = 8.0
+offset_top = 68.0
+offset_right = 189.0
+offset_bottom = 102.0

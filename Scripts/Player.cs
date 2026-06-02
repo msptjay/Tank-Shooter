@@ -20,12 +20,15 @@ public partial class Player : CharacterBody3D
 	private float _MaxStamina = 25.0f;
 	[Export]
 	private float _StaminaRegenRate = 5.0f;
+	[Export]
+	private bool _Exhaustion = false;
 
 	[ExportGroup("Move Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
 	private Label ScoreLabel;
 	private Label StaminaLabel;
+	private ProgressBar StaminaBar;
 	private int Score = 0;
 	
 public override void _Ready()
@@ -33,11 +36,16 @@ public override void _Ready()
 		// Grabs a referance for the labels that are children to the player node
 		ScoreLabel = GetNode<Label>("ScoreLabel"); 
 		StaminaLabel = GetNode<Label>("StaminaLabel");
+		StaminaBar = GetNode<ProgressBar>("StaminaBar");
 	}
 public void UpdateState()
 	{
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
-		if (Input.IsActionPressed("Move_Forward") || Input.IsActionPressed("Move_Backward"))
+		 if (Input.IsActionPressed("Run_Forward") && !_Exhaustion)
+		{
+			_CurrentState = MovementState.Running;
+		}
+		else if (Input.IsActionPressed("Move_Forward") || Input.IsActionPressed("Move_Backward"))
 		{
 			_CurrentState = MovementState.Walking;
 		}
@@ -46,10 +54,6 @@ public void UpdateState()
 			_CurrentState = MovementState.Turning;
 		}
 
-		else if (Input.IsActionPressed("Run_Forward") && _Stamina > 0)
-		{
-			_CurrentState = MovementState.Running;
-		}
 		else
 		{
 			_CurrentState = MovementState.Idle;	
@@ -69,10 +73,10 @@ public void UpdateState()
 
 	private void HandleRunning()
 	{
-		
 		float forwardDirection = Input.GetAxis("Run_Forward", "Move_Backward");
 		float run_velocity = forwardDirection * _RunSpeed;
 		Velocity = Transform.Basis.Z * run_velocity;
+
 	}
 
 	private void StaminaDrain(float delta)
@@ -80,7 +84,7 @@ public void UpdateState()
 		_Stamina -= 10.0f * (float)delta;
 		if (_Stamina <= 0)
 		{
-			_Stamina = 0;
+			_Exhaustion = true;
 			_CurrentState = MovementState.Idle;
 			GD.Print("Out of stamina!");
 		}
@@ -93,17 +97,24 @@ public void UpdateState()
 			if (_Stamina > _MaxStamina)
 			{
 				_Stamina = _MaxStamina;
+				_Exhaustion = false;
+				GD.Print("Stamina fully regenerated!");
 			}
 		}
 	}
     public override void _Process(double delta)
     {
         ScoreLabel.Text = "Score: " + Score.ToString();
-		StaminaLabel.Text = "Stamina: " + _Stamina.ToString("F1");
-		StaminaRegen((float)delta);
+		StaminaLabel.Text = "Stamina: " + ((int)_Stamina).ToString();
+		StaminaBar.Value = _Stamina / _MaxStamina * 100;
+		if (_CurrentState != MovementState.Running)
+		{
+			StaminaRegen((float)delta);
+		}
 		if (_CurrentState == MovementState.Running)
 		{
 			StaminaDrain((float)delta);
+			
 		}
     }
 
