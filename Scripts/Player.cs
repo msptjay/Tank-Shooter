@@ -12,7 +12,7 @@ public partial class Player : CharacterBody3D
 	[Export]
 	private float _WalkSpeed = 10.0f;
 	[Export]
-	private float _RunSpeed = 50.0f;
+	private float _RunSpeed = 20.0f;
 	[ExportGroup("Stamina")]
 	[Export]
 	private float _Stamina = 100.0f;
@@ -52,6 +52,12 @@ public void UpdateState()
 		else if (Input.IsActionPressed("Move_Forward") || Input.IsActionPressed("Move_Backward"))
 		{
 			_CurrentState = MovementState.Walking;
+
+			if (Input.IsActionPressed("Flip"))
+			{
+				_CurrentState = MovementState.Walking;
+				HandleFlip();
+			}
 		}
 		/*else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
 		{
@@ -81,6 +87,10 @@ public void UpdateState()
 		float run_velocity = forwardDirection * _RunSpeed;
 		Velocity = Transform.Basis.Z * run_velocity;
 
+	}
+	private void HandleFlip()
+	{
+		
 	}
 
 	private void StaminaDrain(float delta)
@@ -134,10 +144,10 @@ public void UpdateState()
 	{
 		UpdateState();
 		if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
-    {
+		{
         HandleTurning((float)delta);
 		 Velocity = Vector3.Zero;
-    }
+		}
         switch (_CurrentState)
         {
 			
