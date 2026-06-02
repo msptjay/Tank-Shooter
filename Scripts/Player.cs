@@ -53,11 +53,11 @@ public void UpdateState()
 		{
 			_CurrentState = MovementState.Walking;
 		}
-		else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
+		/*else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
 		{
 			_CurrentState = MovementState.Turning;
 		}
-
+		*/
 		else
 		{
 			_CurrentState = MovementState.Idle;	
@@ -133,8 +133,14 @@ public void UpdateState()
 	public override void _PhysicsProcess(double delta)
 	{
 		UpdateState();
+		if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
+    {
+        HandleTurning((float)delta);
+		 Velocity = Vector3.Zero;
+    }
         switch (_CurrentState)
         {
+			
 
 			// if enum state is set then it will call the apripriate function
             case MovementState.Walking:
@@ -142,12 +148,12 @@ public void UpdateState()
 				GD.Print("Walking");
                 break;
 
-            case MovementState.Turning:
+           /* case MovementState.Turning:
                 HandleTurning((float)delta);
 				 Velocity = Vector3.Zero;
 				GD.Print("Turning");
                 break;
-
+			*/
             case MovementState.Idle:
                 Velocity = Vector3.Zero;
 				GD.Print("Idle");
