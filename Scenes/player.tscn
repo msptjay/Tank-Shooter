@@ -8,7 +8,6 @@
 
 [node name="Player" type="CharacterBody3D" unique_id=546780480]
 script = ExtResource("1_hr86y")
-_StaminaRegenRate = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=208472553]
 shape = SubResource("CapsuleShape3D_fn5od")

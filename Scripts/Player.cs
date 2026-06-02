@@ -15,11 +15,11 @@ public partial class Player : CharacterBody3D
 	private float _RunSpeed = 50.0f;
 	[ExportGroup("Stamina")]
 	[Export]
-	private float _Stamina = 25.0f;
+	private float _Stamina = 100.0f;
 	[Export]
-	private float _MaxStamina = 25.0f;
+	private float _MaxStamina = 100.0f;
 	[Export]
-	private float _StaminaRegenRate = 5.0f;
+	private float _StaminaRegenRate = 15.0f;
 	[Export]
 	private bool _Exhaustion = false;
 
@@ -37,6 +37,7 @@ public override void _Ready()
 		ScoreLabel = GetNode<Label>("ScoreLabel"); 
 		StaminaLabel = GetNode<Label>("StaminaLabel");
 		StaminaBar = GetNode<ProgressBar>("StaminaBar");
+		_Stamina = _MaxStamina;
 	}
 public void UpdateState()
 	{
@@ -81,7 +82,7 @@ public void UpdateState()
 
 	private void StaminaDrain(float delta)
 	{
-		_Stamina -= 10.0f * (float)delta;
+		_Stamina -= 25.0f * (float)delta;
 		if (_Stamina <= 0)
 		{
 			_Exhaustion = true;
@@ -94,11 +95,10 @@ public void UpdateState()
 		if (_Stamina < _MaxStamina && _CurrentState != MovementState.Running)
 		{
 			_Stamina += _StaminaRegenRate * (float)delta;
-			if (_Stamina > _MaxStamina)
+			if (_Stamina >= 25.0f && _Exhaustion)
 			{
-				_Stamina = _MaxStamina;
 				_Exhaustion = false;
-				GD.Print("Stamina fully regenerated!");
+				GD.Print("Stamina regenerated!");
 			}
 		}
 	}
