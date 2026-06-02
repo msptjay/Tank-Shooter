@@ -13,6 +13,13 @@ public partial class Player : CharacterBody3D
 	private float _WalkSpeed = 10.0f;
 	[Export]
 	private float _RunSpeed = 50.0f;
+	[ExportGroup("Stamina")]
+	[Export]
+	private float _Stamina = 25.0f;
+	[Export]
+	private float _MaxStamina = 25.0f;
+	[Export]
+	private float _StaminaRegenRate = 5.0f;
 
 	[ExportGroup("Move Bools")]
 	private bool _IsMoving;
@@ -20,14 +27,16 @@ public partial class Player : CharacterBody3D
 	private Label ScoreLabel;
 	private Label StaminaLabel;
 	private int Score = 0;
-	private float _Stamina = 100.0f;
+	
 public override void _Ready()
 	{
-		ScoreLabel = GetNode<Label>("ScoreLabel");
+		// Grabs a referance for the labels that are children to the player node
+		ScoreLabel = GetNode<Label>("ScoreLabel"); 
 		StaminaLabel = GetNode<Label>("StaminaLabel");
 	}
 public void UpdateState()
 	{
+		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
 		if (Input.IsActionPressed("Move_Forward") || Input.IsActionPressed("Move_Backward"))
 		{
 			_CurrentState = MovementState.Walking;
@@ -76,10 +85,22 @@ public void UpdateState()
 			GD.Print("Out of stamina!");
 		}
 	}
+	private void StaminaRegen(float delta)
+	{
+		if (_Stamina < _MaxStamina && _CurrentState != MovementState.Running)
+		{
+			_Stamina += _StaminaRegenRate * (float)delta;
+			if (_Stamina > _MaxStamina)
+			{
+				_Stamina = _MaxStamina;
+			}
+		}
+	}
     public override void _Process(double delta)
     {
         ScoreLabel.Text = "Score: " + Score.ToString();
 		StaminaLabel.Text = "Stamina: " + _Stamina.ToString("F1");
+		StaminaRegen((float)delta);
 		if (_CurrentState == MovementState.Running)
 		{
 			StaminaDrain((float)delta);
@@ -91,6 +112,8 @@ public void UpdateState()
 		UpdateState();
         switch (_CurrentState)
         {
+
+			// if enum state is set then it will call the apripriate function
             case MovementState.Walking:
                 HandleForward();
 				GD.Print("Walking");
