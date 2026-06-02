@@ -60,11 +60,6 @@ public void UpdateState()
 				HandleFlip();
 			}
 		}
-		/*else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
-		{
-			_CurrentState = MovementState.Turning;
-		}
-		*/
 		else
 		{
 			_CurrentState = MovementState.Idle;	
@@ -171,12 +166,6 @@ public void UpdateState()
 				GD.Print("Walking");
                 break;
 
-           /* case MovementState.Turning:
-                HandleTurning((float)delta);
-				 Velocity = Vector3.Zero;
-				GD.Print("Turning");
-                break;
-			*/
             case MovementState.Idle:
                 Velocity = Vector3.Zero;
 				GD.Print("Idle");
