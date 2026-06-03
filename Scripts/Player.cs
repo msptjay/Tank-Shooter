@@ -35,6 +35,7 @@ public partial class Player : CharacterBody3D
 	private ProgressBar HealthBar;
 	private int Score = 0;
 	
+	
 public override void _Ready()
 	{
 		// Grabs a referance for the labels that are children to the player node
@@ -47,7 +48,7 @@ public override void _Ready()
 public void UpdateState()
 	{
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
-		 if (Input.IsActionPressed("Run_Forward") && !_Exhaustion)
+		 if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward"))
 		{
 			_CurrentState = MovementState.Running;
 		}
@@ -127,7 +128,7 @@ public void UpdateState()
     public override void _Process(double delta)
     {
 		StaminaBar.Value = _Stamina / _MaxStamina * 100;
-		if (_CurrentState != MovementState.Running)
+		if (_CurrentState != MovementState.Running && _Stamina < _MaxStamina)
 		{
 			StaminaRegen((float)delta);
 		}
@@ -158,8 +159,6 @@ public void UpdateState()
 		}
         switch (_CurrentState)
         {
-			
-
 			// if enum state is set then it will call the apripriate function
             case MovementState.Walking:
                 HandleForward();
