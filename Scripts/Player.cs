@@ -3,7 +3,7 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	enum MovementState {Idle, Walking, Turning, Running}
+	enum MovementState {Idle, Walking, Turning, Running, Shooting}
 	private MovementState _CurrentState = MovementState.Idle;
 
 	[ExportGroup("Movement")]
@@ -34,6 +34,8 @@ public partial class Player : CharacterBody3D
 	private ProgressBar StaminaBar;
 	private ProgressBar HealthBar;
 	private int Score = 0;
+
+	private bool canShoot = true;
 	
 	
 public override void _Ready()
@@ -47,8 +49,9 @@ public override void _Ready()
 	}
 public void UpdateState()
 	{
+
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
-		 if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward"))
+		 if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentState != MovementState.Shooting)
 		{
 			_CurrentState = MovementState.Running;
 		}
@@ -63,9 +66,15 @@ public void UpdateState()
 		}
 		else
 		{
+			if(Input.IsActionPressed("Shoot") && _CurrentState != MovementState.Shooting)
+			{
+				_CurrentState = MovementState.Shooting;
+			}
+			else
 			_CurrentState = MovementState.Idle;	
 		}
 	}
+
 	private void HandleTurning(float delta)
 	{
 		float turnDirection = Input.GetAxis("Turn_Right", "Turn_Left");
@@ -125,6 +134,13 @@ public void UpdateState()
 		}
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
 	}
+
+	private void ShootingStance()
+	{
+
+
+		canShoot = true;
+	}
     public override void _Process(double delta)
     {
 		StaminaBar.Value = _Stamina / _MaxStamina * 100;
@@ -147,6 +163,10 @@ public void UpdateState()
 				GD.Print("Flip ready!");
 			}
 		}
+		if (_CurrentState != MovementState.Shooting)
+			{
+				canShoot = false;
+			}
     }
 
 	public override void _PhysicsProcess(double delta)
@@ -174,6 +194,11 @@ public void UpdateState()
                 HandleRunning();
 				GD.Print("Running");
                 break;
+			case MovementState.Shooting:
+				ShootingStance();
+				GD.Print("Shooting Stance");
+				break;
+
         }
         MoveAndSlide();
 	}
