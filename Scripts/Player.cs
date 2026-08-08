@@ -156,21 +156,33 @@ public void UpdateState()
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
 	}
 
-	private void ShootingStance()
+	private void ShootingStance(float delta)
 	{
 		
 		if (bullet == null || _pos == null) return;
 
-		canShoot = true;
-		if(Input.IsActionPressed("Shooting") && canShoot)
+		// float shootingReady = 3.0f;
+		// shootingReady -= delta;
+		// {
+		// 	if (shootingReady <= 0)
+		// 	{
+				canShoot = true;
+				if(Input.IsActionPressed("Shooting") && canShoot)
 				{
+					
 					
 					var bulletInstance = bullet.Instantiate<Bullet>();
 					GetTree().Root.AddChild(bulletInstance);
 					bulletInstance.GlobalPosition = _pos.GlobalPosition;
 					bulletInstance.GlobalRotation = _pos.GlobalRotation;
 					GD.Print("Shooting!");
+					
+						
+	
+					
 				}
+			//}
+		//}
 
 		
 	}
@@ -228,7 +240,7 @@ public void UpdateState()
 				GD.Print("Running");
                 break;
 			case MovementState.Shooting:
-				ShootingStance();
+				ShootingStance((float)delta);
 				GD.Print("Shooting Stance");
 				break;
 
