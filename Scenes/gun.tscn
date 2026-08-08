@@ -181,6 +181,3 @@ shadow_mesh = SubResource("ArrayMesh_efdbt")
 [node name="Gun" type="MeshInstance3D" unique_id=1556828431]
 transform = Transform3D(1, 0, 0, 0, 3.1699998, 0, 0, 0, 1.31, 0, 0, 0)
 mesh = SubResource("ArrayMesh_63rek")
-
-[node name="pos" type="Node3D" parent="." unique_id=354767492]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68965477, 5.235389)

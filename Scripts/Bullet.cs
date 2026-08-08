@@ -4,7 +4,7 @@ using System;
 public partial class Bullet : CharacterBody3D
 {
 
-    public float speed;
+    public float speed = 50.0f;
 
 public override void _Process(double delta)
     {

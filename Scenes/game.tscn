@@ -16,5 +16,9 @@ size = Vector3(25, 2, 25)
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." unique_id=546780480 instance=ExtResource("1_iukft")]
+[node name="Player" parent="." unique_id=546780480 node_paths=PackedStringArray("_pos") instance=ExtResource("1_iukft")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0)
+_pos = NodePath("POS")
+
+[node name="POS" type="Node3D" parent="Player" unique_id=2126017879]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.635419, 0.1076864, -0.36277252)

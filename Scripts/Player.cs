@@ -36,8 +36,12 @@ public partial class Player : CharacterBody3D
 	private int Score = 0;
 
 	private bool canShoot = true;
-	
-	
+
+	private PackedScene bullet { get ; set;}
+	[Export]
+	private Node3D _pos {get; set;}
+
+
 public override void _Ready()
 	{
 		// Grabs a referance for the labels that are children to the player node
@@ -46,12 +50,22 @@ public override void _Ready()
 		_Stamina = _MaxStamina;
 		_Health = _MaxHealth;
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
+		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
+		if (bullet == null)
+        {
+            GD.PrintErr("Failed to load bullet scene!");
+        }
+		 if (_pos == null)
+        {
+            GD.PrintErr("_pos is not assigned! Drag a Node3D into the '_pos' slot in the Inspector.");
+        }
+
 	}
 public void UpdateState()
 	{
 
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
-		 if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentState != MovementState.Shooting)
+		if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentState != MovementState.Shooting)
 		{
 			_CurrentState = MovementState.Running;
 		}
@@ -69,9 +83,16 @@ public void UpdateState()
 			if(Input.IsActionPressed("Shoot") && _CurrentState != MovementState.Shooting)
 			{
 				_CurrentState = MovementState.Shooting;
+
+				// if(Input.IsActionPressed("Shooting") && canShoot && _CurrentState == MovementState.Shooting)
+				// {
+				// 	// Shooting logic here
+				// 	GD.Print("Shooting!");
+				// }
 			}
 			else
 			_CurrentState = MovementState.Idle;	
+			canShoot = false;
 		}
 	}
 
@@ -137,9 +158,21 @@ public void UpdateState()
 
 	private void ShootingStance()
 	{
-
+		
+		if (bullet == null || _pos == null) return;
 
 		canShoot = true;
+		if(Input.IsActionPressed("Shooting") && canShoot)
+				{
+					
+					var bulletInstance = bullet.Instantiate<Bullet>();
+					GetTree().Root.AddChild(bulletInstance);
+					bulletInstance.GlobalPosition = _pos.GlobalPosition;
+					bulletInstance.GlobalRotation = _pos.GlobalRotation;
+					GD.Print("Shooting!");
+				}
+
+		
 	}
     public override void _Process(double delta)
     {
