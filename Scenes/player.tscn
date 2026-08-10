@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://1uqialc1lg8a"]
 
 [ext_resource type="Script" uid="uid://dwne43rqhuq7e" path="res://Scripts/Player.cs" id="1_hr86y"]
-[ext_resource type="PackedScene" uid="uid://xbk4lvp3g23s" path="res://Scenes/gun.tscn" id="2_kyqiw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fn5od"]
 
@@ -35,6 +34,3 @@ offset_left = 4.0
 offset_top = 21.0
 offset_right = 192.0
 offset_bottom = 59.0
-
-[node name="Gun" parent="." unique_id=1556828431 instance=ExtResource("2_kyqiw")]
-transform = Transform3D(-0.05, 0, -5.769903e-09, 0, 0.159, 0, 4.371139e-09, 0, -0.066, 0.6324195, 0, 0)

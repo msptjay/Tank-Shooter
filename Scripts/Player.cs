@@ -35,11 +35,14 @@ public partial class Player : CharacterBody3D
 	private ProgressBar HealthBar;
 	private int Score = 0;
 
-	private bool canShoot = true;
+	private bool canShoot;
+	private bool hasGun;
+	private bool IsMoving;
 
 	private PackedScene bullet { get ; set;}
 	[Export]
 	private Node3D _pos {get; set;}
+
 
 
 public override void _Ready()
@@ -50,6 +53,8 @@ public override void _Ready()
 		_Stamina = _MaxStamina;
 		_Health = _MaxHealth;
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
+		hasGun = false;
+		canShoot = false;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
 		if (bullet == null)
         {
@@ -156,35 +161,25 @@ public void UpdateState()
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
 	}
 
-	private void ShootingStance(float delta)
+	private void PickUp()
 	{
 		
-		if (bullet == null || _pos == null) return;
+	}
 
-		// float shootingReady = 3.0f;
-		// shootingReady -= delta;
-		// {
-		// 	if (shootingReady <= 0)
-		// 	{
-				canShoot = true;
-				if(Input.IsActionPressed("Shooting") && canShoot)
+	private void ShootingStance(float delta)
+	{
+		if (bullet == null || _pos == null) return;
+			if(Input.IsActionPressed("Shooting") && canShoot && !IsMoving )
 				{
-					
-					
 					var bulletInstance = bullet.Instantiate<Bullet>();
 					GetTree().Root.AddChild(bulletInstance);
 					bulletInstance.GlobalPosition = _pos.GlobalPosition;
 					bulletInstance.GlobalRotation = _pos.GlobalRotation;
 					GD.Print("Shooting!");
-					
-						
-	
-					
 				}
-			//}
-		//}
-
-		
+			
+				
+				
 	}
     public override void _Process(double delta)
     {
@@ -219,9 +214,13 @@ public void UpdateState()
 		UpdateState();
 		if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
 		{
+			IsMoving = true;
         HandleTurning((float)delta);
 		 Velocity = Vector3.Zero;
 		}
+		else
+		IsMoving = false;
+
         switch (_CurrentState)
         {
 			// if enum state is set then it will call the apripriate function

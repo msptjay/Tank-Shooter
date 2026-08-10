@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://ss7lpluw2wil"]
 
 [ext_resource type="PackedScene" uid="uid://1uqialc1lg8a" path="res://Scenes/player.tscn" id="1_iukft"]
+[ext_resource type="PackedScene" uid="uid://xbk4lvp3g23s" path="res://Scenes/gun.tscn" id="1_qxrlw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_26iok"]
 
 [node name="Game" type="Node3D" unique_id=1309208773]
 
@@ -11,6 +14,13 @@ size = Vector3(25, 2, 25)
 [node name="Floor" type="CSGBox3D" parent="." unique_id=310364411]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 size = Vector3(25, 2, 25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=49247297]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4998071, -9.390507)
+mesh = SubResource("BoxMesh_26iok")
+
+[node name="Gun" parent="Floor/MeshInstance3D" unique_id=1556828431 instance=ExtResource("1_qxrlw")]
+transform = Transform3D(0.032840054, 0, -0.049768213, 0, 0.159, 0, 0.037703194, 0, 0.04334887, 0, 0.68587184, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=186313271]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 3, 0)
