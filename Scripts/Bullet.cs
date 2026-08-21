@@ -11,8 +11,8 @@ public override void _Process(double delta)
         Position += Transform.Basis * new Vector3(0,0, speed) * (float) delta;
     }
 
-public void On_Timer_timeout()
+/*public void On_Timer_timeout()
     {
         QueueFree();
     }
-}
+*/}

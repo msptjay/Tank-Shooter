@@ -40,8 +40,9 @@ public partial class Player : CharacterBody3D
 	private bool IsMoving;
 
 	private PackedScene bullet { get ; set;}
-	[Export]
-	private Node3D _pos {get; set;}
+	
+
+	private Marker3D _pos;
 
 
 
@@ -56,6 +57,7 @@ public override void _Ready()
 		hasGun = false;
 		canShoot = false;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
+		_pos = GetNodeOrNull<Marker3D>("Gun/POS");
 		if (bullet == null)
         {
             GD.PrintErr("Failed to load bullet scene!");
