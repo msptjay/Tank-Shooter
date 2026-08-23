@@ -38,9 +38,10 @@ public partial class Player : CharacterBody3D
 	private bool canShoot;
 	private bool IsMoving;
 
+	private float _shootCooldown = 0.5f;
+	private float _shootTimer = 1.0f;
 	private PackedScene bullet { get ; set;}
 	
-
 	private Node3D _pos;
 
 
@@ -54,6 +55,7 @@ public override void _Ready()
 		_Health = _MaxHealth;
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
 		canShoot = true;
+		_shootTimer = _shootCooldown;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
 		_pos = GetNode<Node3D>("Gun/POS");
 		if (bullet == null)
@@ -160,9 +162,10 @@ public void UpdateState()
 
 	private void ShootingStance(float delta)
 	{
-		if (bullet == null || _pos == null) return;
 		canShoot = true;
-			if(Input.IsActionPressed("Shooting") && canShoot && !IsMoving )
+		if (bullet == null || _pos == null) return;
+		
+			if(Input.IsActionJustPressed("Shooting") && canShoot && !IsMoving )
 				{
 					var bulletInstance = bullet.Instantiate<Bullet>();
 					GetTree().Root.AddChild(bulletInstance);
@@ -176,6 +179,7 @@ public void UpdateState()
 	}
     public override void _Process(double delta)
     {
+
 		StaminaBar.Value = _Stamina / _MaxStamina * 100;
 		if (_CurrentState != MovementState.Running && _Stamina < _MaxStamina)
 		{
@@ -200,6 +204,8 @@ public void UpdateState()
 			{
 				canShoot = false;
 			}
+
+
     }
 
 	public override void _PhysicsProcess(double delta)

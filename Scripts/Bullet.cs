@@ -28,6 +28,15 @@ public override void _Process(double delta)
         
     }
 
+public void On_Bullet_body_entered(Node3D body)
+    {
+        if (body is Player player)
+        {
+           // player.TakeDamage(10);
+            QueueFree();
+        }
+    }
+
 public void On_Timer_timeout()
     {
         QueueFree();
