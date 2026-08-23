@@ -36,13 +36,12 @@ public partial class Player : CharacterBody3D
 	private int Score = 0;
 
 	private bool canShoot;
-	private bool hasGun;
 	private bool IsMoving;
 
 	private PackedScene bullet { get ; set;}
 	
 
-	private Marker3D _pos;
+	private Node3D _pos;
 
 
 
@@ -54,10 +53,9 @@ public override void _Ready()
 		_Stamina = _MaxStamina;
 		_Health = _MaxHealth;
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
-		hasGun = false;
-		canShoot = false;
+		canShoot = true;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
-		_pos = GetNodeOrNull<Marker3D>("Gun/POS");
+		_pos = GetNode<Node3D>("Gun/POS");
 		if (bullet == null)
         {
             GD.PrintErr("Failed to load bullet scene!");
@@ -91,15 +89,10 @@ public void UpdateState()
 			{
 				_CurrentState = MovementState.Shooting;
 
-				// if(Input.IsActionPressed("Shooting") && canShoot && _CurrentState == MovementState.Shooting)
-				// {
-				// 	// Shooting logic here
-				// 	GD.Print("Shooting!");
-				// }
 			}
 			else
 			_CurrentState = MovementState.Idle;	
-			canShoot = false;
+			
 		}
 	}
 
@@ -163,14 +156,12 @@ public void UpdateState()
 		HealthBar.Value = (float)_Health / _MaxHealth * 100;
 	}
 
-	private void PickUp()
-	{
-		
-	}
+	
 
 	private void ShootingStance(float delta)
 	{
 		if (bullet == null || _pos == null) return;
+		canShoot = true;
 			if(Input.IsActionPressed("Shooting") && canShoot && !IsMoving )
 				{
 					var bulletInstance = bullet.Instantiate<Bullet>();

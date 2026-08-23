@@ -182,5 +182,5 @@ shadow_mesh = SubResource("ArrayMesh_efdbt")
 transform = Transform3D(1, 0, 0, 0, 3.1699998, 0, 0, 0, 1.31, 0, 0, 0)
 mesh = SubResource("ArrayMesh_63rek")
 
-[node name="POS" type="Marker3D" parent="." unique_id=1520118112]
-transform = Transform3D(1, 0, 0, 0, 0.9999933, 0.0036466653, 0, -0.0036466653, 0.9999934, 0, 0.62107027, 6.0235367)
+[node name="POS" type="Node3D" parent="." unique_id=1057121940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7928635, 5.760402)
