@@ -85,6 +85,11 @@ public void UpdateState()
 				HandleFlip();
 			}
 		}
+		else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
+		{
+			_CurrentState = MovementState.Turning;
+		}
+		 
 		else
 		{
 			if(Input.IsActionPressed("Shoot") && _CurrentState != MovementState.Shooting)
@@ -100,21 +105,33 @@ public void UpdateState()
 
 	private void HandleTurning(float delta)
 	{
-		float turnDirection = Input.GetAxis("Turn_Right", "Turn_Left");
-		RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y + (turnDirection * _TurnSpeed * delta), RotationDegrees.Z);
+		
+			IsMoving = true;
+			float turnDirection = Input.GetAxis("Turn_Right", "Turn_Left");
+			RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y + (turnDirection * _TurnSpeed * delta), RotationDegrees.Z);
+			Velocity = Vector3.Zero;
+			
+		
 	}
 	private void HandleForward()
 	{
+	
 		float forwardDirection = Input.GetAxis("Move_Forward","Move_Backward");
 		float walk_velocity = forwardDirection * _WalkSpeed;
 		Velocity = Transform.Basis.Z * walk_velocity;
+
+		
+		
 	}
 
 	private void HandleRunning()
 	{
+		
 		float forwardDirection = Input.GetAxis("Run_Forward", "Move_Backward");
 		float run_velocity = forwardDirection * _RunSpeed;
 		Velocity = Transform.Basis.Z * run_velocity;
+			
+		
 
 	}
 	private void HandleFlip()
@@ -204,6 +221,14 @@ public void UpdateState()
 			{
 				canShoot = false;
 			}
+		if (_CurrentState == MovementState.Walking || _CurrentState == MovementState.Running)
+		{
+		IsMoving = true;
+		}
+		else
+		{
+			IsMoving = false;	
+		}
 
 
     }
@@ -211,14 +236,14 @@ public void UpdateState()
 	public override void _PhysicsProcess(double delta)
 	{
 		UpdateState();
-		if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
-		{
-			IsMoving = true;
-        HandleTurning((float)delta);
-		 Velocity = Vector3.Zero;
-		}
-		else
-		IsMoving = false;
+		// if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
+		// {
+		// 	IsMoving = true;
+        // HandleTurning((float)delta);
+		//  Velocity = Vector3.Zero;
+		// }
+		// else
+		// IsMoving = false;
 
         switch (_CurrentState)
         {
@@ -241,6 +266,11 @@ public void UpdateState()
 				ShootingStance((float)delta);
 				GD.Print("Shooting Stance");
 				break;
+
+			case MovementState.Turning:
+				HandleTurning((float)delta);
+				GD.Print("Turning");
+				 break;
 
         }
         MoveAndSlide();
