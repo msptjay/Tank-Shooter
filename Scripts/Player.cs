@@ -4,7 +4,9 @@ using System;
 public partial class Player : CharacterBody3D
 {
 	enum MovementState {Idle, Walking, Turning, Running, Shooting}
+	enum AttackState {Idle, Shooting, Stabbing}
 	private MovementState _CurrentState = MovementState.Idle;
+	private AttackState _CurrentAttackState = AttackState.Idle;
 
 	[ExportGroup("Movement")]
 	[Export]
@@ -68,11 +70,11 @@ public override void _Ready()
         }
 
 	}
-public void UpdateState()
+public void UpdateMovement()
 	{
 
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
-		if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentState != MovementState.Shooting)
+		if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentAttackState != AttackState.Shooting)
 		{
 			_CurrentState = MovementState.Running;
 		}
@@ -84,29 +86,28 @@ public void UpdateState()
 			{
 				HandleFlip();
 			}
-		}
-		else if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
-		{
-			_CurrentState = MovementState.Turning;
-		}
-		 
-		else
-		{
-			if(Input.IsActionPressed("Shoot") && _CurrentState != MovementState.Shooting)
-			{
-				_CurrentState = MovementState.Shooting;
+		} 
+		
+		
+	}
 
-			}
-			else
-			_CurrentState = MovementState.Idle;	
-			
+public void UpdateAttack()
+	{
+		
+		if (Input.IsActionPressed("Shoot") && _CurrentAttackState != AttackState.Shooting)
+		{
+			_CurrentAttackState = AttackState.Shooting;
+		}
+		else if (!Input.IsActionPressed("Shoot") && _CurrentAttackState == AttackState.Shooting)
+		{
+			_CurrentAttackState = AttackState.Idle;
 		}
 	}
 
 	private void HandleTurning(float delta)
 	{
 		
-			IsMoving = true;
+			// IsMoving = true;
 			float turnDirection = Input.GetAxis("Turn_Right", "Turn_Left");
 			RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y + (turnDirection * _TurnSpeed * delta), RotationDegrees.Z);
 			Velocity = Vector3.Zero;
@@ -217,7 +218,7 @@ public void UpdateState()
 				GD.Print("Flip ready!");
 			}
 		}
-		if (_CurrentState != MovementState.Shooting)
+		if (_CurrentAttackState != AttackState.Shooting)
 			{
 				canShoot = false;
 			}
@@ -227,7 +228,7 @@ public void UpdateState()
 		}
 		else
 		{
-			IsMoving = false;	
+		IsMoving = false;	
 		}
 
 
@@ -235,15 +236,16 @@ public void UpdateState()
 
 	public override void _PhysicsProcess(double delta)
 	{
-		UpdateState();
-		// if (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left"))
-		// {
-		// 	IsMoving = true;
-        // HandleTurning((float)delta);
-		//  Velocity = Vector3.Zero;
-		// }
-		// else
-		// IsMoving = false;
+		UpdateMovement();
+		UpdateAttack();
+		if (Input.IsActionPressed("Turn_Right") && !Input.IsActionPressed("Shoot") || Input.IsActionPressed("Turn_Left") && !Input.IsActionPressed("Shoot"))
+		{
+		IsMoving = true;
+        HandleTurning((float)delta);
+		 Velocity = Vector3.Zero;
+		}
+		else
+		IsMoving = false;
 
         switch (_CurrentState)
         {
@@ -262,10 +264,10 @@ public void UpdateState()
                 HandleRunning();
 				GD.Print("Running");
                 break;
-			case MovementState.Shooting:
-				ShootingStance((float)delta);
-				GD.Print("Shooting Stance");
-				break;
+			// case MovementState.Shooting:
+			// 	ShootingStance((float)delta);
+			// 	GD.Print("Shooting Stance");
+			// 	break;
 
 			case MovementState.Turning:
 				HandleTurning((float)delta);
@@ -274,5 +276,13 @@ public void UpdateState()
 
         }
         MoveAndSlide();
+
+		switch (_CurrentAttackState)
+		{
+			case AttackState.Shooting:
+				ShootingStance((float)delta);
+				GD.Print("Shooting");
+				break;
+		}
 	}
 }
