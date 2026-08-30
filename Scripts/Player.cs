@@ -8,11 +8,11 @@ public partial class Player : CharacterBody3D
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
 
-	private Camera3D _Camera;
-	private Node3D _CameraPivot;
+	// private Camera3D _Camera;
+	// private Node3D _CameraPivot;
 
-	 [Export(PropertyHint.Range, "0.0, 1.0")]
-	 private float _CameraSensitivity = 0.5f;
+	//  [Export(PropertyHint.Range, "0.0, 1.0")]
+	//  private float _CameraSensitivity = 0.5f;
 	 [Export] 
 	 private float camera_Tilt = Mathf.DegToRad(75);
 
@@ -59,9 +59,9 @@ public partial class Player : CharacterBody3D
 
 public override void _Ready()
 	{
-		// Grabs a referance for the labels that are children to the player node
-		_Camera = GetNode<Camera3D>("CameraOrigin/SpringArm3D/Camera3D");
-		_CameraPivot = GetNode<Node3D>("CameraOrigin");
+		// // Grabs a referance for the labels that are children to the player node
+		// _Camera = GetNode<Camera3D>("CameraOrigin/SpringArm3D/Camera3D");
+		// _CameraPivot = GetNode<Node3D>("CameraOrigin");
 		StaminaBar = GetNode<ProgressBar>("StaminaBar");
 		HealthBar = GetNode<ProgressBar>("HealthBar");
 		_Stamina = _MaxStamina;
