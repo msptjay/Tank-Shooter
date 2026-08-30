@@ -8,10 +8,8 @@ public partial class Player : CharacterBody3D
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
 
-	[Export]
 	private Camera3D _Camera;
-	[Export]
-	 private Node3D _CameraPivot;
+	private Node3D _CameraPivot;
 
 	 [Export(PropertyHint.Range, "0.0, 1.0")]
 	 private float _CameraSensitivity = 0.5f;
@@ -62,8 +60,8 @@ public partial class Player : CharacterBody3D
 public override void _Ready()
 	{
 		// Grabs a referance for the labels that are children to the player node
-		_Camera = GetNode<Camera3D>("CameraPivot/Camera3D");
-		_CameraPivot = GetNode<Node3D>("CameraPivot");
+		_Camera = GetNode<Camera3D>("CameraOrigin/SpringArm3D/Camera3D");
+		_CameraPivot = GetNode<Node3D>("CameraOrigin");
 		StaminaBar = GetNode<ProgressBar>("StaminaBar");
 		HealthBar = GetNode<ProgressBar>("HealthBar");
 		_Stamina = _MaxStamina;
@@ -82,6 +80,20 @@ public override void _Ready()
             GD.PrintErr("_pos is not assigned! Drag a Node3D into the '_pos' slot in the Inspector.");
         }
 
+	}
+
+	public void _unhandled_input(InputEvent @event)
+	{
+		if (@event is InputEventMouseMotion mouseMotionEvent)
+		{
+			// Rotate the player based on mouse movement
+			RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y - (mouseMotionEvent.Relative.X * _CameraSensitivity), RotationDegrees.Z);
+
+			// Tilt the camera pivot based on mouse movement
+			float newTilt = _CameraPivot.RotationDegrees.X - (mouseMotionEvent.Relative.Y * _CameraSensitivity);
+			newTilt = Mathf.Clamp(newTilt, -camera_Tilt, camera_Tilt);
+			_CameraPivot.RotationDegrees = new Vector3(newTilt, _CameraPivot.RotationDegrees.Y, _CameraPivot.RotationDegrees.Z);
+		}
 	}
 public void UpdateMovement()
 	{

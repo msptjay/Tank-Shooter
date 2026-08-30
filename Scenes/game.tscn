@@ -10,6 +10,16 @@ size = Vector3(60, 1, 60)
 [sub_resource type="BoxMesh" id="BoxMesh_j0tj5"]
 size = Vector3(60, 2, 60)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vdtgm"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_26iok"]
+height = 5.0
+radius = 2.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_26iok"]
+top_radius = 1.0
+bottom_radius = 2.0
+
 [node name="Game" type="Node3D" unique_id=1309208773]
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=904573045]
@@ -28,3 +38,13 @@ shadow_enabled = true
 
 [node name="Player" parent="." unique_id=546780480 instance=ExtResource("1_iukft")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1879076046]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2039003, 2.166495, 0)
+physics_material_override = SubResource("PhysicsMaterial_vdtgm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=256176166]
+shape = SubResource("CylinderShape3D_26iok")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1817041900]
+mesh = SubResource("CylinderMesh_26iok")
