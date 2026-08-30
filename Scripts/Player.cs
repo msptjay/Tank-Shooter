@@ -82,19 +82,19 @@ public override void _Ready()
 
 	}
 
-	public void _unhandled_input(InputEvent @event)
-	{
-		if (@event is InputEventMouseMotion mouseMotionEvent)
-		{
-			// Rotate the player based on mouse movement
-			RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y - (mouseMotionEvent.Relative.X * _CameraSensitivity), RotationDegrees.Z);
+	// public void _unhandled_input(InputEvent @event)
+	// {
+	// 	if (@event is InputEventMouseMotion mouseMotionEvent)
+	// 	{
+	// 		// Rotate the player based on mouse movement
+	// 		RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y - (mouseMotionEvent.Relative.X * _CameraSensitivity), RotationDegrees.Z);
 
-			// Tilt the camera pivot based on mouse movement
-			float newTilt = _CameraPivot.RotationDegrees.X - (mouseMotionEvent.Relative.Y * _CameraSensitivity);
-			newTilt = Mathf.Clamp(newTilt, -camera_Tilt, camera_Tilt);
-			_CameraPivot.RotationDegrees = new Vector3(newTilt, _CameraPivot.RotationDegrees.Y, _CameraPivot.RotationDegrees.Z);
-		}
-	}
+	// 		// Tilt the camera pivot based on mouse movement
+	// 		float newTilt = _CameraPivot.RotationDegrees.X - (mouseMotionEvent.Relative.Y * _CameraSensitivity);
+	// 		newTilt = Mathf.Clamp(newTilt, -camera_Tilt, camera_Tilt);
+	// 		_CameraPivot.RotationDegrees = new Vector3(newTilt, _CameraPivot.RotationDegrees.Y, _CameraPivot.RotationDegrees.Z);
+	// 	}
+	// }
 public void UpdateMovement()
 	{
 
