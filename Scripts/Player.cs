@@ -8,6 +8,16 @@ public partial class Player : CharacterBody3D
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
 
+	[Export]
+	private Camera3D _Camera;
+	[Export]
+	 private Node3D _CameraPivot;
+
+	 [Export(PropertyHint.Range, "0.0, 1.0")]
+	 private float _CameraSensitivity = 0.5f;
+	 [Export] 
+	 private float camera_Tilt = Mathf.DegToRad(75);
+
 	[ExportGroup("Movement")]
 	[Export]
 	private float _TurnSpeed = 50.0f;
@@ -15,7 +25,7 @@ public partial class Player : CharacterBody3D
 	private float _WalkSpeed = 10.0f;
 	[Export]
 	private float _RunSpeed = 20.0f;
-	[ExportGroup("Stamina")]
+	[ExportGroup("Player")]
 	[Export]
 	private float _Stamina = 100.0f;
 	[Export]
@@ -24,21 +34,22 @@ public partial class Player : CharacterBody3D
 	private float _StaminaRegenRate = 15.0f;
 	[Export]
 	private bool _Exhaustion = false;
+	[Export]
+	private float _flipCooldown = 3.0f;
 
 	private int _Health;
 	private int _MaxHealth = 100;
 
-	[ExportGroup("Move Bools")]
+	[ExportGroup("Player Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
 	private bool _Flipped = false;
-	private float _flipCooldown = 3.0f;
 	private ProgressBar StaminaBar;
 	private ProgressBar HealthBar;
-	private int Score = 0;
-
 	private bool canShoot;
 	private bool IsMoving;
+	private int Score = 0;
+
 
 	private float _shootCooldown = 0.5f;
 	private float _shootTimer = 1.0f;
@@ -51,6 +62,8 @@ public partial class Player : CharacterBody3D
 public override void _Ready()
 	{
 		// Grabs a referance for the labels that are children to the player node
+		_Camera = GetNode<Camera3D>("CameraPivot/Camera3D");
+		_CameraPivot = GetNode<Node3D>("CameraPivot");
 		StaminaBar = GetNode<ProgressBar>("StaminaBar");
 		HealthBar = GetNode<ProgressBar>("HealthBar");
 		_Stamina = _MaxStamina;
@@ -264,10 +277,6 @@ public void UpdateAttack()
                 HandleRunning();
 				GD.Print("Running");
                 break;
-			// case MovementState.Shooting:
-			// 	ShootingStance((float)delta);
-			// 	GD.Print("Shooting Stance");
-			// 	break;
 
 			case MovementState.Turning:
 				HandleTurning((float)delta);

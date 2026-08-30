@@ -24,11 +24,11 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kyqiw")
 transform = Transform3D(-0.045, 0, -5.157944e-09, 0, 0.142, 0, 3.934025e-09, 0, -0.059, 0.59932977, 0, 0)
 
 [node name="Camera Origin" type="Node3D" parent="." unique_id=272739175]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5344652, 0.88272, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Camera Origin" unique_id=1821499337]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34052193, -0.31603652, 0.02708608)
-spring_length = 2.0
+spring_length = 3.0
 margin = 0.5
 
 [node name="Camera3D" type="Camera3D" parent="Camera Origin/SpringArm3D" unique_id=469148521]
