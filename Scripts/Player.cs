@@ -8,11 +8,6 @@ public partial class Player : CharacterBody3D
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
 
-	// private Camera3D _Camera;
-	// private Node3D _CameraPivot;
-
-	//  [Export(PropertyHint.Range, "0.0, 1.0")]
-	//  private float _CameraSensitivity = 0.5f;
 	 [Export] 
 	 private float camera_Tilt = Mathf.DegToRad(75);
 
@@ -41,15 +36,17 @@ public partial class Player : CharacterBody3D
 	[ExportGroup("Player Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
+	private bool canShoot;
+	private bool JustShot = false;
+	private bool IsMoving;
 	private bool _Flipped = false;
 	private ProgressBar StaminaBar;
 	private ProgressBar HealthBar;
-	private bool canShoot;
-	private bool IsMoving;
+	private ProgressBar ShootingBar;
 	private int Score = 0;
 
 
-	private float _shootCooldown = 0.5f;
+	private float _shootCooldown = 2.0f;
 	private float _shootTimer = 1.0f;
 	private PackedScene bullet { get ; set;}
 	
@@ -59,18 +56,22 @@ public partial class Player : CharacterBody3D
 
 public override void _Ready()
 	{
-		// // Grabs a referance for the labels that are children to the player node
-		// _Camera = GetNode<Camera3D>("CameraOrigin/SpringArm3D/Camera3D");
-		// _CameraPivot = GetNode<Node3D>("CameraOrigin");
-		StaminaBar = GetNode<ProgressBar>("StaminaBar");
-		HealthBar = GetNode<ProgressBar>("HealthBar");
-		_Stamina = _MaxStamina;
-		_Health = _MaxHealth;
-		HealthBar.Value = (float)_Health / _MaxHealth * 100;
+	
+
+
+		StaminaBar = GetNode<ProgressBar>("StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
+		HealthBar = GetNode<ProgressBar>("HealthBar"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
+		ShootingBar = GetNode<ProgressBar>("ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
+
+		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
+		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
+		HealthBar.Value = (float)_Health / _MaxHealth * 100; 
 		canShoot = true;
 		_shootTimer = _shootCooldown;
-		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
-		_pos = GetNode<Node3D>("Gun/POS");
+		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
+		_pos = GetNode<Node3D>("Gun/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
+
+		// if no bullet var is found ("NULL") then it will print an error to the console, this is to help with debugging if the bullet scene is not assigned in the inspector.
 		if (bullet == null)
         {
             GD.PrintErr("Failed to load bullet scene!");
@@ -82,31 +83,26 @@ public override void _Ready()
 
 	}
 
-	// public void _unhandled_input(InputEvent @event)
-	// {
-	// 	if (@event is InputEventMouseMotion mouseMotionEvent)
-	// 	{
-	// 		// Rotate the player based on mouse movement
-	// 		RotationDegrees = new Vector3(RotationDegrees.X, RotationDegrees.Y - (mouseMotionEvent.Relative.X * _CameraSensitivity), RotationDegrees.Z);
 
-	// 		// Tilt the camera pivot based on mouse movement
-	// 		float newTilt = _CameraPivot.RotationDegrees.X - (mouseMotionEvent.Relative.Y * _CameraSensitivity);
-	// 		newTilt = Mathf.Clamp(newTilt, -camera_Tilt, camera_Tilt);
-	// 		_CameraPivot.RotationDegrees = new Vector3(newTilt, _CameraPivot.RotationDegrees.Y, _CameraPivot.RotationDegrees.Z);
-	// 	}
-	// }
 public void UpdateMovement()
 	{
+		
+		//The player will only "Run forward" if they are not exhausted, and if they are already pressing the move forward button, and if they are not currently shooting.
+
 
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
 		if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentAttackState != AttackState.Shooting)
 		{
 			_CurrentState = MovementState.Running;
 		}
-		else if (Input.IsActionPressed("Move_Forward") || Input.IsActionPressed("Move_Backward"))
+
+		// If they are not doing the above, it will check if they do this next.
+		else if (Input.IsActionPressed("Move_Forward") && _CurrentAttackState != AttackState.Shooting || Input.IsActionPressed("Move_Backward") && _CurrentAttackState != AttackState.Shooting)
 		{
 			_CurrentState = MovementState.Walking;
 
+			
+             // if the above if statement is true, they will then do this if conditions are met.
 			if (Input.IsActionPressed("Move_Backward") && _CurrentState == MovementState.Walking && Input.IsActionPressed("Flip") && !_Flipped)
 			{
 				HandleFlip();
@@ -208,8 +204,9 @@ public void UpdateAttack()
 		canShoot = true;
 		if (bullet == null || _pos == null) return;
 		
-			if(Input.IsActionJustPressed("Shooting") && canShoot && !IsMoving )
+			if(Input.IsActionJustPressed("Shooting") && canShoot && !IsMoving && !JustShot)
 				{
+					JustShot = true;
 					var bulletInstance = bullet.Instantiate<Bullet>();
 					GetTree().Root.AddChild(bulletInstance);
 					bulletInstance.GlobalPosition = _pos.GlobalPosition;
@@ -222,6 +219,17 @@ public void UpdateAttack()
 	}
     public override void _Process(double delta)
     {
+		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
+		if(JustShot && _CurrentAttackState == AttackState.Shooting)
+		{
+			_shootTimer -= (float)delta;
+			if (_shootTimer <= 0)
+			{
+				JustShot = false;
+				_shootTimer = _shootCooldown;
+			}
+		}
+
 
 		StaminaBar.Value = _Stamina / _MaxStamina * 100;
 		if (_CurrentState != MovementState.Running && _Stamina < _MaxStamina)

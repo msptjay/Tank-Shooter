@@ -46,3 +46,9 @@ offset_left = 4.0
 offset_top = 21.0
 offset_right = 192.0
 offset_bottom = 59.0
+
+[node name="ShootBar" type="ProgressBar" parent="." unique_id=1280140432]
+offset_left = 8.0
+offset_top = 110.0
+offset_right = 196.0
+offset_bottom = 148.0
