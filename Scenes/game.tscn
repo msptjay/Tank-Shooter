@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ss7lpluw2wil"]
 
-[ext_resource type="PackedScene" uid="uid://1uqialc1lg8a" path="res://Scenes/player.tscn" id="1_iukft"]
+[ext_resource type="PackedScene" uid="uid://1uqialc1lg8a" path="res://Scenes/Player.tscn" id="1_iukft"]
+[ext_resource type="PackedScene" uid="uid://cwali74ra3pai" path="res://Scenes/AmmoPack.tscn" id="2_qxrlw"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_26iok"]
 
@@ -48,3 +49,6 @@ shape = SubResource("CylinderShape3D_26iok")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1817041900]
 mesh = SubResource("CylinderMesh_26iok")
+
+[node name="AmmoPack" parent="StaticBody3D" unique_id=1987952945 instance=ExtResource("2_qxrlw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1502414, -1.11777, -6.3769274)

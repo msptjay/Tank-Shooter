@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cwali74ra3pai"]
+
+[ext_resource type="Script" uid="uid://caw3upxy4krj1" path="res://Scenes/AmmoPack.cs" id="1_2posk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vdtgm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lq0kv"]
+albedo_color = Color(1, 0, 1, 1)
+
+[node name="AmmoPack" type="Area3D" unique_id=1987952945]
+script = ExtResource("1_2posk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2013757075]
+shape = SubResource("BoxShape3D_26iok")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=825667386]
+mesh = SubResource("BoxMesh_vdtgm")
+surface_material_override/0 = SubResource("StandardMaterial3D_lq0kv")

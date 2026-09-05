@@ -33,6 +33,10 @@ public partial class Player : CharacterBody3D
 	private int _Health;
 	private int _MaxHealth = 100;
 
+	private int Bullets;	
+	private int StartingBullets = 10;
+	private int MaxBullets = 60;
+
 	[ExportGroup("Player Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
@@ -43,12 +47,15 @@ public partial class Player : CharacterBody3D
 	private ProgressBar StaminaBar;
 	private ProgressBar HealthBar;
 	private ProgressBar ShootingBar;
+	private ProgressBar AmmoCountBar;
+
 	private int Score = 0;
 
 
 	private float _shootCooldown = 2.0f;
 	private float _shootTimer = 1.0f;
 	private PackedScene bullet { get ; set;}
+	private PackedScene Ammo { get; set; }
 	
 	private Node3D _pos;
 
@@ -58,7 +65,7 @@ public override void _Ready()
 	{
 	
 
-
+		AmmoCountBar = GetNode<ProgressBar>("AmmoCountBar"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
 		StaminaBar = GetNode<ProgressBar>("StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
 		HealthBar = GetNode<ProgressBar>("HealthBar"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
 		ShootingBar = GetNode<ProgressBar>("ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
@@ -66,6 +73,9 @@ public override void _Ready()
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
 		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
 		HealthBar.Value = (float)_Health / _MaxHealth * 100; 
+		
+
+		Bullets = StartingBullets; // sets the starting bullets to whatever the bullets variable is set to in the inspector
 		canShoot = true;
 		_shootTimer = _shootCooldown;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
@@ -146,6 +156,19 @@ public void UpdateAttack()
 		
 	}
 
+	public void Pickup(Node3D body)
+	{
+		if (body is AmmoPack ammoPack)
+		{
+			Bullets += 10; // adds 10 bullets to the player's bullet count when they collide with the ammo pack
+			if (Bullets > MaxBullets) // if the player's bullet count exceeds the max bullets, set it to max bullets
+			{
+				Bullets = MaxBullets;
+			}
+			ammoPack.QueueFree(); // removes the ammo pack from the scene after it has been collected
+		}
+	}
+
 	private void HandleRunning()
 	{
 		
@@ -201,12 +224,22 @@ public void UpdateAttack()
 
 	private void ShootingStance(float delta)
 	{
-		canShoot = true;
+		if (Bullets <= 0)
+		{
+			canShoot = false;
+			GD.Print("Out of ammo!");
+			
+		}
+		else
+		{
+			canShoot = true;
+		}
 		if (bullet == null || _pos == null) return;
 		
 			if(Input.IsActionJustPressed("Shooting") && canShoot && !IsMoving && !JustShot)
 				{
 					JustShot = true;
+					Bullets -= 1;
 					var bulletInstance = bullet.Instantiate<Bullet>();
 					GetTree().Root.AddChild(bulletInstance);
 					bulletInstance.GlobalPosition = _pos.GlobalPosition;
@@ -219,6 +252,7 @@ public void UpdateAttack()
 	}
     public override void _Process(double delta)
     {
+		AmmoCountBar.Value = Bullets;
 		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
 		if(JustShot)
 		{
