@@ -220,7 +220,7 @@ public void UpdateAttack()
     public override void _Process(double delta)
     {
 		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
-		if(JustShot && _CurrentAttackState == AttackState.Shooting)
+		if(JustShot)
 		{
 			_shootTimer -= (float)delta;
 			if (_shootTimer <= 0)
