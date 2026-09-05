@@ -59,6 +59,8 @@ public partial class Player : CharacterBody3D
 	
 	private Node3D _pos;
 
+	
+
 
 
 public override void _Ready()
@@ -79,6 +81,7 @@ public override void _Ready()
 		canShoot = true;
 		_shootTimer = _shootCooldown;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
+		Ammo = GD.Load<PackedScene>("res://Scenes/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
 		_pos = GetNode<Node3D>("Gun/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
 
 		// if no bullet var is found ("NULL") then it will print an error to the console, this is to help with debugging if the bullet scene is not assigned in the inspector.
@@ -118,11 +121,15 @@ public void UpdateMovement()
 				HandleFlip();
 			}
 		} 
+		else
+		{
+			_CurrentState = MovementState.Idle;
+		}
 		
 		
 	}
 
-public void UpdateAttack()
+	public void UpdateAttack()
 	{
 		
 		if (Input.IsActionPressed("Shoot") && _CurrentAttackState != AttackState.Shooting)
@@ -156,17 +163,17 @@ public void UpdateAttack()
 		
 	}
 
-	public void Pickup(Node3D body)
+	public void Pickup()
 	{
-		if (body is AmmoPack ammoPack)
-		{
+		GD.Print("This is cooking");
+		
 			Bullets += 10; // adds 10 bullets to the player's bullet count when they collide with the ammo pack
 			if (Bullets > MaxBullets) // if the player's bullet count exceeds the max bullets, set it to max bullets
 			{
 				Bullets = MaxBullets;
 			}
-			ammoPack.QueueFree(); // removes the ammo pack from the scene after it has been collected
-		}
+			 // removes the ammo pack from the scene after it has been collected
+		
 	}
 
 	private void HandleRunning()
@@ -338,8 +345,8 @@ public void UpdateAttack()
 				 break;
 
         }
-        MoveAndSlide();
-
+       MoveAndSlide();
+        //MoveAndCollide(Velocity * (float)delta);
 		switch (_CurrentAttackState)
 		{
 			case AttackState.Shooting:

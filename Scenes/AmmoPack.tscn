@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cwali74ra3pai"]
 
-[ext_resource type="Script" uid="uid://caw3upxy4krj1" path="res://Scenes/AmmoPack.cs" id="1_2posk"]
+[ext_resource type="Script" uid="uid://caw3upxy4krj1" path="res://Scripts/AmmoPack.cs" id="1_2posk"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
 
