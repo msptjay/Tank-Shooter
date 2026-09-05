@@ -18,7 +18,7 @@ public partial class Player : CharacterBody3D
 	private float _WalkSpeed = 10.0f;
 	[Export]
 	private float _RunSpeed = 20.0f;
-	[ExportGroup("Player")]
+	[ExportGroup("Player Stats")]
 	[Export]
 	private float _Stamina = 100.0f;
 	[Export]
@@ -33,9 +33,11 @@ public partial class Player : CharacterBody3D
 	private int _Health;
 	private int _MaxHealth = 100;
 
-	private int Bullets;	
-	private int StartingBullets = 10;
+	private int TotalBullets;	
+	private int StartingBullets = 6;
 	private int MaxBullets = 60;
+	private int AmmoClipSize = 6;
+	private int AmmoInClip;
 
 	[ExportGroup("Player Bools")]
 	private bool _IsMoving;
@@ -44,15 +46,17 @@ public partial class Player : CharacterBody3D
 	private bool JustShot = false;
 	private bool IsMoving;
 	private bool _Flipped = false;
+
+	[ExportGroup("UI")]
 	private ProgressBar StaminaBar;
 	private ProgressBar HealthBar;
 	private ProgressBar ShootingBar;
 	private ProgressBar AmmoCountBar;
+	private ProgressBar AmmoCountBar2;
 
 	private int Score = 0;
 
-
-	private float _shootCooldown = 2.0f;
+	private float _shootCooldown = 0.5f;
 	private float _shootTimer = 1.0f;
 	private PackedScene bullet { get ; set;}
 	private PackedScene Ammo { get; set; }
@@ -66,7 +70,7 @@ public partial class Player : CharacterBody3D
 public override void _Ready()
 	{
 	
-
+		AmmoCountBar2 = GetNode<ProgressBar>("AmmoCountBar2"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
 		AmmoCountBar = GetNode<ProgressBar>("AmmoCountBar"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
 		StaminaBar = GetNode<ProgressBar>("StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
 		HealthBar = GetNode<ProgressBar>("HealthBar"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
@@ -77,7 +81,8 @@ public override void _Ready()
 		HealthBar.Value = (float)_Health / _MaxHealth * 100; 
 		
 
-		Bullets = StartingBullets; // sets the starting bullets to whatever the bullets variable is set to in the inspector
+		TotalBullets = StartingBullets; // sets the starting bullets to whatever the bullets variable is set to in the inspector
+		AmmoInClip = StartingBullets; // sets the ammo in clip to whatever the bullets variable is set to in the inspector
 		canShoot = true;
 		_shootTimer = _shootCooldown;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
@@ -97,7 +102,7 @@ public override void _Ready()
 	}
 
 
-public void UpdateMovement()
+	public void UpdateMovement()
 	{
 		
 		//The player will only "Run forward" if they are not exhausted, and if they are already pressing the move forward button, and if they are not currently shooting.
@@ -140,6 +145,7 @@ public void UpdateMovement()
 		{
 			_CurrentAttackState = AttackState.Idle;
 		}
+		
 	}
 
 	private void HandleTurning(float delta)
@@ -167,10 +173,10 @@ public void UpdateMovement()
 	{
 		GD.Print("This is cooking");
 		
-			Bullets += 10; // adds 10 bullets to the player's bullet count when they collide with the ammo pack
-			if (Bullets > MaxBullets) // if the player's bullet count exceeds the max bullets, set it to max bullets
+			TotalBullets += 10; // adds 10 bullets to the player's bullet count when they collide with the ammo pack
+			if (TotalBullets > MaxBullets) // if the player's bullet count exceeds the max bullets, set it to max bullets
 			{
-				Bullets = MaxBullets;
+				TotalBullets = MaxBullets;
 			}
 			 // removes the ammo pack from the scene after it has been collected
 		
@@ -231,22 +237,27 @@ public void UpdateMovement()
 
 	private void ShootingStance(float delta)
 	{
-		if (Bullets <= 0)
+		if (AmmoInClip <= 0 && TotalBullets <= 0)
 		{
 			canShoot = false;
-			GD.Print("Out of ammo!");
+			GD.Print("No Ammo In Clip! Reload!");
 			
 		}
 		else
 		{
 			canShoot = true;
 		}
+		if(Input.IsActionPressed("Reload") && TotalBullets > 0 && AmmoInClip < StartingBullets)
+		{
+			Reload();
+			GD.Print("Reloading!");
+		}
 		if (bullet == null || _pos == null) return;
 		
 			if(Input.IsActionJustPressed("Shooting") && canShoot && !IsMoving && !JustShot)
 				{
 					JustShot = true;
-					Bullets -= 1;
+					AmmoInClip -= 1;
 					var bulletInstance = bullet.Instantiate<Bullet>();
 					GetTree().Root.AddChild(bulletInstance);
 					bulletInstance.GlobalPosition = _pos.GlobalPosition;
@@ -257,9 +268,24 @@ public void UpdateMovement()
 				
 				
 	}
+	private void Reload()
+	{
+		int bulletsToReload = StartingBullets - AmmoInClip;
+		if (TotalBullets >= bulletsToReload)
+		{
+			TotalBullets -= bulletsToReload;
+			AmmoInClip = StartingBullets;
+		}
+		else
+		{
+			AmmoInClip += TotalBullets;
+			TotalBullets = 0;
+		}
+	}
     public override void _Process(double delta)
     {
-		AmmoCountBar.Value = Bullets;
+		AmmoCountBar.Value = AmmoInClip / (float)StartingBullets * 100;
+		AmmoCountBar2.Value = TotalBullets / (float)MaxBullets * 100;
 		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
 		if(JustShot)
 		{
