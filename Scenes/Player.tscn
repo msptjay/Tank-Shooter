@@ -34,33 +34,28 @@ margin = 0.5
 [node name="Camera3D" type="Camera3D" parent="CameraOrigin/SpringArm3D" unique_id=469148521]
 transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0.6073588, 1.0006021, 1.791513)
 
-[node name="AmmoCountBar" type="ProgressBar" parent="." unique_id=1467390011]
-offset_left = 3.0
-offset_top = 247.0
-offset_right = 203.0
-offset_bottom = 276.0
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1220579666]
+offset_left = 25.0
+offset_top = 10.0
+offset_right = 175.0
+offset_bottom = 160.0
 
-[node name="AmmoCountBar2" type="ProgressBar" parent="." unique_id=1366234005]
-offset_left = 1.0
-offset_top = 195.0
-offset_right = 201.0
-offset_bottom = 224.0
+[node name="StaminaBar" type="ProgressBar" parent="VBoxContainer" unique_id=249002327]
+layout_mode = 2
 
-[node name="StaminaBar" type="ProgressBar" parent="." unique_id=249002327]
-offset_left = 8.0
-offset_top = 68.0
-offset_right = 189.0
-offset_bottom = 102.0
-show_percentage = false
+[node name="ShootBar" type="ProgressBar" parent="VBoxContainer" unique_id=1280140432]
+layout_mode = 2
 
-[node name="HealthBar" type="ProgressBar" parent="." unique_id=1803718603]
-offset_left = 4.0
-offset_top = 21.0
-offset_right = 192.0
-offset_bottom = 59.0
+[node name="Bool" type="Label" parent="VBoxContainer" unique_id=1013121030]
+layout_mode = 2
 
-[node name="ShootBar" type="ProgressBar" parent="." unique_id=1280140432]
-offset_left = 8.0
-offset_top = 110.0
-offset_right = 196.0
-offset_bottom = 148.0
+[node name="HealthLabel" type="Label" parent="VBoxContainer" unique_id=2095419027]
+layout_mode = 2
+
+[node name="AmmoCountLabel" type="Label" parent="VBoxContainer" unique_id=960588488]
+layout_mode = 2
+text = "Ammo :"
+
+[node name="AmmoTotalLabel" type="Label" parent="VBoxContainer" unique_id=1701148416]
+layout_mode = 2
+text = "Total Ammo :"

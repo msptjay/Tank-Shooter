@@ -49,10 +49,11 @@ public partial class Player : CharacterBody3D
 
 	[ExportGroup("UI")]
 	private ProgressBar StaminaBar;
-	private ProgressBar HealthBar;
+	private Label HealthLabel;
 	private ProgressBar ShootingBar;
-	private ProgressBar AmmoCountBar;
-	private ProgressBar AmmoCountBar2;
+	private Label AmmoCountLabel;
+	private Label AmmoTotalLabel;
+	private Label CanShootLabel;
 
 	private int Score = 0;
 
@@ -69,16 +70,17 @@ public partial class Player : CharacterBody3D
 
 public override void _Ready()
 	{
-	
-		AmmoCountBar2 = GetNode<ProgressBar>("AmmoCountBar2"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		AmmoCountBar = GetNode<ProgressBar>("AmmoCountBar"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		StaminaBar = GetNode<ProgressBar>("StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
-		HealthBar = GetNode<ProgressBar>("HealthBar"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
-		ShootingBar = GetNode<ProgressBar>("ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
+		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
+		
+		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
+		AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
+		StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
+		HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
+		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
 
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
 		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
-		HealthBar.Value = (float)_Health / _MaxHealth * 100; 
+		HealthLabel.Text = $"Health: " + (_Health);
 		
 
 		TotalBullets = StartingBullets; // sets the starting bullets to whatever the bullets variable is set to in the inspector
@@ -230,7 +232,7 @@ public override void _Ready()
 			GD.Print("Player is dead!");
 			// You can add additional logic here for when the player dies, such as respawning or ending the game.
 		}
-		HealthBar.Value = (float)_Health / _MaxHealth * 100;
+		HealthLabel.Text = $"Health: " + (_Health);
 	}
 
 	
@@ -270,7 +272,7 @@ public override void _Ready()
 	}
 	private void Reload()
 	{
-		int bulletsToReload = StartingBullets - AmmoInClip;
+		int bulletsToReload = AmmoClipSize - AmmoInClip;
 		if (TotalBullets >= bulletsToReload)
 		{
 			TotalBullets -= bulletsToReload;
@@ -284,8 +286,9 @@ public override void _Ready()
 	}
     public override void _Process(double delta)
     {
-		AmmoCountBar.Value = AmmoInClip / (float)StartingBullets * 100;
-		AmmoCountBar2.Value = TotalBullets / (float)MaxBullets * 100;
+		CanShootLabel.Text = $"Can Shoot?" + (canShoot);
+		AmmoCountLabel.Text = $"Weapon:" + (AmmoInClip) + "/" + (AmmoClipSize);
+		AmmoTotalLabel.Text = $"Total Ammo: " + (TotalBullets) + "/" + (MaxBullets);
 		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
 		if(JustShot)
 		{
@@ -319,7 +322,7 @@ public override void _Ready()
 			}
 		}
 		if (_CurrentAttackState != AttackState.Shooting)
-			{
+			{ 
 				canShoot = false;
 			}
 		if (_CurrentState == MovementState.Walking || _CurrentState == MovementState.Running)
