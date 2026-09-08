@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://1uqialc1lg8a" path="res://Scenes/Player.tscn" id="1_iukft"]
 [ext_resource type="PackedScene" uid="uid://cwali74ra3pai" path="res://Scenes/AmmoPack.tscn" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://bsvjgi5ihcdw3" path="res://Scenes/HealthPack.tscn" id="3_wrm1d"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_26iok"]
 
@@ -52,3 +53,6 @@ mesh = SubResource("CylinderMesh_26iok")
 
 [node name="AmmoPack" parent="StaticBody3D" unique_id=1987952945 instance=ExtResource("2_qxrlw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1502414, -1.11777, -6.3769274)
+
+[node name="HealthPack" parent="StaticBody3D" unique_id=191115328 instance=ExtResource("3_wrm1d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.61267, -0.850484, -6.385845)

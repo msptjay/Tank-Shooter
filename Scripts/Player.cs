@@ -61,6 +61,7 @@ public partial class Player : CharacterBody3D
 	private float _shootTimer = 1.0f;
 	private PackedScene bullet { get ; set;}
 	private PackedScene Ammo { get; set; }
+	private PackedScene Health { get; set; }
 	
 	private Node3D _pos;
 
@@ -89,6 +90,7 @@ public override void _Ready()
 		_shootTimer = _shootCooldown;
 		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
 		Ammo = GD.Load<PackedScene>("res://Scenes/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
+		Health = GD.Load<PackedScene>("res://Scenes/HealthPack.tscn"); // Health var = the HealthPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up health packs.
 		_pos = GetNode<Node3D>("Gun/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
 
 		// if no bullet var is found ("NULL") then it will print an error to the console, this is to help with debugging if the bullet scene is not assigned in the inspector.
@@ -171,17 +173,28 @@ public override void _Ready()
 		
 	}
 
-	public void Pickup()
+	public void Pickup(Area3D body)
 	{
-		GD.Print("This is cooking");
 		
+		if (body is AmmoPack ammoPack)
+		{
 			TotalBullets += 10; // adds 10 bullets to the player's bullet count when they collide with the ammo pack
 			if (TotalBullets > MaxBullets) // if the player's bullet count exceeds the max bullets, set it to max bullets
 			{
 				TotalBullets = MaxBullets;
 			}
 			 // removes the ammo pack from the scene after it has been collected
-		
+		}
+
+		if (body is HealthPack healthPack)
+		{
+			_Health += 25; // adds 25 health to the player's health count when they collide with the health pack
+			if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
+			{
+				_Health = _MaxHealth;
+			}
+			 
+		}
 	}
 
 	private void HandleRunning()
@@ -203,6 +216,7 @@ public override void _Ready()
 
 	private void StaminaDrain(float delta)
 	{
+		StaminaBar.Modulate = new Color(0, 225, 0); // Change the color of the stamina bar to green when not exhausted
 		_Stamina -= 25.0f * (float)delta;
 		if (_Stamina <= 0)
 		{
@@ -210,6 +224,7 @@ public override void _Ready()
 			_CurrentState = MovementState.Idle;
 			GD.Print("Out of stamina!");
 		}
+		
 	}
 	private void StaminaRegen(float delta)
 	{
@@ -286,10 +301,21 @@ public override void _Ready()
 	}
     public override void _Process(double delta)
     {
+		if (_Exhaustion)
+		{
+			StaminaBar.Modulate = new Color(225, 0, 0); // Change the color of the stamina bar to red when exhausted
+
+		}
+		else
+		{
+			StaminaBar.Modulate = new Color(0, 225, 0);
+		}
 		CanShootLabel.Text = $"Can Shoot?" + (canShoot);
 		AmmoCountLabel.Text = $"Weapon:" + (AmmoInClip) + "/" + (AmmoClipSize);
 		AmmoTotalLabel.Text = $"Total Ammo: " + (TotalBullets) + "/" + (MaxBullets);
+		HealthLabel.Text = $"Health: " + (_Health);
 		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
+		
 		if(JustShot)
 		{
 			_shootTimer -= (float)delta;

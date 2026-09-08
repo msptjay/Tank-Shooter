@@ -40,17 +40,28 @@ offset_top = 10.0
 offset_right = 175.0
 offset_bottom = 160.0
 
-[node name="StaminaBar" type="ProgressBar" parent="VBoxContainer" unique_id=249002327]
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=1296981824]
 layout_mode = 2
+text = "Stamina Bar"
+
+[node name="StaminaBar" type="ProgressBar" parent="VBoxContainer" unique_id=249002327]
+modulate = Color(2.2241454, 0, 0, 1)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1092228099]
+layout_mode = 2
+text = "Shoot Cooldown"
 
 [node name="ShootBar" type="ProgressBar" parent="VBoxContainer" unique_id=1280140432]
 layout_mode = 2
 
 [node name="Bool" type="Label" parent="VBoxContainer" unique_id=1013121030]
 layout_mode = 2
+text = "Can Shoot"
 
 [node name="HealthLabel" type="Label" parent="VBoxContainer" unique_id=2095419027]
 layout_mode = 2
+text = "Health :"
 
 [node name="AmmoCountLabel" type="Label" parent="VBoxContainer" unique_id=960588488]
 layout_mode = 2

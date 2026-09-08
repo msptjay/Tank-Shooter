@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class AmmoPack : Area3D
+public partial class PistolPack : Area3D
 {
 	public bool monitoring = true;
 	// Called when the node enters the scene tree for the first time.
@@ -21,11 +21,9 @@ public partial class AmmoPack : Area3D
 		if (body is Player player)
 		{
 			player.Pickup(this);
-			GD.Print("Picked up ammo pack!");
+			GD.Print("Picked up pistol pack!");
 			QueueFree();
 		}
 		
 	}
-
-	
 }
