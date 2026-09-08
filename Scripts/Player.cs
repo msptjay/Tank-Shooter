@@ -44,26 +44,14 @@ public partial class Player : CharacterBody3D
 	[ExportGroup("UI")]
 	private ProgressBar StaminaBar;
 	private Label HealthLabel;
-	// private ProgressBar ShootingBar;
-	// private Label AmmoCountLabel;
-	// private Label AmmoTotalLabel;
-	// private Label CanShootLabel;
+	
 
 	private int Score = 0;
 
 	[ExportGroup("Pistol Stats")]
 
-	// private int TotalPistolBullets;	
-	// private int StartingPistolBullets = 6;
-	// private int MaxPistolBullets = 60;
-	// private int AmmoClipSizePistol = 6;
-	// private int AmmoInClipPistol;
-	// private float _shootCooldown = 1.0f;
-	// private float _shootTimer = 1.0f;
-	//  private Node3D _pos;
-	// private Marker3D gunSpawnPOS;
+	
 	private PackedScene PistolScene;
-	// private PackedScene bullet { get ; set;}
 
 	private Pistol pistol;
 	private Node3D currentGun;
@@ -89,14 +77,11 @@ public override void _Ready()
 		 PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 		
 
-
 		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
 		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
 		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
 		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
 		AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		//AmmoCountLabel.Text = $"Weapon:" + (AmmoInClipPistol) + "/" + (AmmoClipSizePistol);
-		//AmmoTotalLabel.Text = $"Total Ammo: " + (TotalPistolBullets) + "/" + (MaxPistolBullets);
 		StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
 		HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
@@ -112,6 +97,20 @@ public override void _Ready()
 		
 		
 
+	}
+	private void UpdateAmmoUI()
+	{
+		if (pistol != null)
+		{
+			AmmoCountLabel.Text = $"Weapon: " + (pistol.AmmoInMagazine) + "/" + (pistol.MagazineSize);
+			AmmoTotalLabel.Text = $"Total Ammo: " + (pistol.TotalAmmo) + "/" + (pistol.MaxAmmo);
+		}
+		else
+		{
+			AmmoCountLabel.Text = $"Weapon: 0/0";
+			AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+		}
+		
 	}
 
 
@@ -199,7 +198,11 @@ public override void _Ready()
 		
 		if (body is AmmoPack ammoPack)
 		{
-			pistol.AddAmmo(10);
+			 if (pistol != null)
+    		{
+        pistol.AddAmmo(10);
+		UpdateAmmoUI();
+    		}
 			 
 		}
 
@@ -301,8 +304,7 @@ public override void _Ready()
 		{
 			StaminaBar.Modulate = new Color(0, 225, 0);
 		}
-		if(Input.IsActionPressed("Shoot") || Input.IsActionPressed("Reload") || Input.IsActionPressed("Shooting"))
-		{
+	
 		
 
 		if (_MaxStamina >= _Stamina)
@@ -337,9 +339,9 @@ public override void _Ready()
 		{
 		IsMoving = false;	
 		}
-		}
-
-		}
+		
+		
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -385,6 +387,7 @@ public override void _Ready()
 		{
 			case AttackState.Shooting:
 				pistol.Shoot();
+				UpdateAmmoUI();
 				//GD.Print("Shooting");
 				break;
 		}

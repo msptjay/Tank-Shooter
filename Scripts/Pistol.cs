@@ -11,6 +11,11 @@ public partial class Pistol : Node3D
 	private float _shootCooldown = 0.5f;
 	private float _shootTimer = 0;
 
+public int AmmoInMagazine => _ammoInMagazine;
+public int TotalAmmo => _totalAmmo;
+public int MagazineSize => _magazineSize;
+public int MaxAmmo => _maxAmmo;
+
 	
 
 	// private Pistol pistol;
@@ -73,12 +78,15 @@ public partial class Pistol : Node3D
 	if (!SpawnBullet())
         return;
 
-
     _ammoInMagazine--;
 
     SpawnBullet();
 
     _shootTimer = _shootCooldown;
+		
+	}
+	public void AmmoUI()
+	{
 		
 	}
 	private bool SpawnBullet()

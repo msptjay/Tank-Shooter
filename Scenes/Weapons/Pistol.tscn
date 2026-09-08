@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ddx1tf83un2jv"]
 
 [ext_resource type="PackedScene" uid="uid://ddmky1sh38ncy" path="res://Assets/Shitty Pistol.glb" id="1_hhr6j"]
-[ext_resource type="Script" uid="uid://brbjgu88em7s" path="res://Scenes/Weapons/Pistol.cs" id="1_t511x"]
+[ext_resource type="Script" uid="uid://brbjgu88em7s" path="res://Scripts/Pistol.cs" id="1_t511x"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
 size = Vector3(2.5, 8, 8)
