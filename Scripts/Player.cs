@@ -198,10 +198,10 @@ public override void _Ready()
 		
 		if (body is AmmoPack ammoPack)
 		{
-			 if (pistol != null)
+			if (pistol != null)
     		{
-        pistol.AddAmmo(10);
-		UpdateAmmoUI();
+        		pistol.AddAmmo(10);
+				UpdateAmmoUI();
     		}
 			 
 		}
@@ -219,22 +219,22 @@ public override void _Ready()
 		}
 		if (body is PistolPack)
 {
-   			 if (pistol != null)
+   			if (pistol != null)
        		 return;
 
-    	if (PistolScene == null)
-    	{
-      	  GD.PrintErr("PistolScene could not be loaded!");
-      	  return;
-    	}
+    		if (PistolScene == null)
+    		{
+      	 	GD.PrintErr("PistolScene could not be loaded!");
+      	 	 return;
+    		}
 
-    pistol = PistolScene.Instantiate<Pistol>();
+    		pistol = PistolScene.Instantiate<Pistol>();
 
-    gunSpawnPOS.AddChild(pistol);
+    		gunSpawnPOS.AddChild(pistol);
 
-    pistol.GlobalTransform = gunSpawnPOS.GlobalTransform;
+    		pistol.GlobalTransform = gunSpawnPOS.GlobalTransform;
 
-    GD.Print("Picked up pistol!");
+   			 GD.Print("Picked up pistol!");
 }
 	}
 
@@ -349,12 +349,12 @@ public override void _Ready()
 		UpdateAttack();
 		if (Input.IsActionPressed("Turn_Right") && !Input.IsActionPressed("Shoot") || Input.IsActionPressed("Turn_Left") && !Input.IsActionPressed("Shoot"))
 		{
-		IsMoving = true;
+		// IsMoving = true;
         HandleTurning((float)delta);
 		 Velocity = Vector3.Zero;
 		}
-		else
-		IsMoving = false;
+		// else
+		// IsMoving = false;
 
         switch (_CurrentState)
         {
