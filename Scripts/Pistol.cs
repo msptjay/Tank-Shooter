@@ -29,7 +29,7 @@ public int MaxAmmo => _maxAmmo;
 		_bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
 		_Muzzle = GetNode<Marker3D>("Area3D/POS");
 		
-		_totalAmmo = _maxAmmo;
+		_totalAmmo = 10;
 		_ammoInMagazine = _magazineSize;
 
 

@@ -157,6 +157,7 @@ public override void _Ready()
     if (Input.IsActionJustPressed("Reload"))
     {
         pistol.Reload();
+		UpdateAmmoUI();
     }
 
     if (Input.IsActionPressed("Shoot") &&
