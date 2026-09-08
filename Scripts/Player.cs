@@ -62,9 +62,12 @@ public partial class Player : CharacterBody3D
 	private PackedScene bullet { get ; set;}
 	private PackedScene Ammo { get; set; }
 	private PackedScene Health { get; set; }
+	private PackedScene PistolPack { get; set; }
 	
 	private Node3D _pos;
-	private MeshInstance3D _gun;
+	private PackedScene Pistol;
+	private Node3D _gunPistol;
+	private Marker3D gunSpawnPOS;
 
 	
 
@@ -72,29 +75,32 @@ public partial class Player : CharacterBody3D
 
 public override void _Ready()
 	{
+
+		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
 		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
-		
 		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
 		AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
 		StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
 		HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
 		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
 
+		HealthLabel.Text = $"Health: " + (_Health);
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
 		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
-		HealthLabel.Text = $"Health: " + (_Health);
 		
 
 		TotalBullets = StartingBullets; // sets the starting bullets to whatever the bullets variable is set to in the inspector
 		AmmoInClip = StartingBullets; // sets the ammo in clip to whatever the bullets variable is set to in the inspector
 		canShoot = true;
 		_shootTimer = _shootCooldown;
-		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
-		Ammo = GD.Load<PackedScene>("res://Scenes/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
-		Health = GD.Load<PackedScene>("res://Scenes/HealthPack.tscn"); // Health var = the HealthPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up health packs.
-		_pos = GetNode<Node3D>("Gun/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
 
-		// if no bullet var is found ("NULL") then it will print an error to the console, this is to help with debugging if the bullet scene is not assigned in the inspector.
+		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
+		Ammo = GD.Load<PackedScene>("res://Scenes/Pickups/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
+		Health = GD.Load<PackedScene>("res://Scenes/Pickups/HealthPack.tscn"); // Health var = the HealthPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up health packs.
+		Pistol = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
+		PistolPack = GD.Load<PackedScene>("res://Scenes/Pickups/PistolPack.tscn"); // Pistol var = the PistolPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
+		// _pos = GetNode<Marker3D>("Pistol/Area3D/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
+
 		if (bullet == null)
         {
             GD.PrintErr("Failed to load bullet scene!");
@@ -145,7 +151,7 @@ public override void _Ready()
 		
 		if (Input.IsActionPressed("Shoot") && _CurrentAttackState != AttackState.Shooting)
 		{
-			if (_gun == null)
+			if (_gunPistol == null)
 			{
 				GD.Print("No gun picked up!");
 				return;
@@ -205,6 +211,17 @@ public override void _Ready()
 				_Health = _MaxHealth;
 			}
 			 
+		}
+		if(body is PistolPack pistolPack)
+		{
+			
+				_pos = GetNode<Marker3D>("Pistol/Area3D/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
+				_gunPistol = Pistol.Instantiate<Node3D>();
+				gunSpawnPOS.AddChild(_gunPistol);
+				// _gunPistol = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn");
+				// gunSpawnPOS.AddChild(_gunPistol.Instantiate<Node3D>());
+				GD.Print("Picked up pistol!");
+			
 		}
 	}
 

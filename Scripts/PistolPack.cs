@@ -4,7 +4,6 @@ using System;
 public partial class PistolPack : Area3D
 {
 	public bool monitoring = true;
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		BodyEntered += OnBodyEntered;

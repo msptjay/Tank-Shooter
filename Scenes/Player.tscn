@@ -12,6 +12,9 @@ albedo_color = Color(1, 0.05882353, 0.14901961, 1)
 [node name="Player" type="CharacterBody3D" unique_id=546780480]
 script = ExtResource("1_hr86y")
 
+[node name="GunSpawnPOS" type="Marker3D" parent="." unique_id=605052019]
+transform = Transform3D(-0.05, 0, -4.371139e-09, 0, 0.05, 0, 4.371139e-09, 0, -0.05, 0.6172057, 0, 0)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=208472553]
 shape = SubResource("CapsuleShape3D_fn5od")
 
