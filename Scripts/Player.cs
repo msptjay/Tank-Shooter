@@ -33,82 +33,83 @@ public partial class Player : CharacterBody3D
 	private int _Health;
 	private int _MaxHealth = 100;
 
-	private int TotalBullets;	
-	private int StartingBullets = 6;
-	private int MaxBullets = 60;
-	private int AmmoClipSize = 6;
-	private int AmmoInClip;
-
 	[ExportGroup("Player Bools")]
 	private bool _IsMoving;
 	private bool _IsTurning;
-	private bool canShoot;
-	private bool JustShot = false;
+	// private bool canShoot;
+	// private bool JustShot = false;
 	private bool IsMoving;
 	private bool _Flipped = false;
 
 	[ExportGroup("UI")]
 	private ProgressBar StaminaBar;
 	private Label HealthLabel;
-	private ProgressBar ShootingBar;
-	private Label AmmoCountLabel;
-	private Label AmmoTotalLabel;
-	private Label CanShootLabel;
+	// private ProgressBar ShootingBar;
+	// private Label AmmoCountLabel;
+	// private Label AmmoTotalLabel;
+	// private Label CanShootLabel;
 
 	private int Score = 0;
 
-	private float _shootCooldown = 0.5f;
-	private float _shootTimer = 1.0f;
-	private PackedScene bullet { get ; set;}
+	[ExportGroup("Pistol Stats")]
+
+	// private int TotalPistolBullets;	
+	// private int StartingPistolBullets = 6;
+	// private int MaxPistolBullets = 60;
+	// private int AmmoClipSizePistol = 6;
+	// private int AmmoInClipPistol;
+	// private float _shootCooldown = 1.0f;
+	// private float _shootTimer = 1.0f;
+	//  private Node3D _pos;
+	// private Marker3D gunSpawnPOS;
+	private PackedScene PistolScene;
+	// private PackedScene bullet { get ; set;}
+
+	private Pistol pistol;
+	private Node3D currentGun;
 	private PackedScene Ammo { get; set; }
 	private PackedScene Health { get; set; }
 	private PackedScene PistolPack { get; set; }
-	
-	private Node3D _pos;
-	private PackedScene Pistol;
-	private Node3D _gunPistol;
+
+
+	private Label AmmoCountLabel;
+	private Label AmmoTotalLabel;
+	private Label CanShootLabel;
+	private ProgressBar ShootingBar;
 	private Marker3D gunSpawnPOS;
-
+	
 	
 
-
-
+	
 public override void _Ready()
 	{
 
-		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
-		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
-		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
-		HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
-		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
 
-		HealthLabel.Text = $"Health: " + (_Health);
-		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
-		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
+
+		 PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 		
 
-		TotalBullets = StartingBullets; // sets the starting bullets to whatever the bullets variable is set to in the inspector
-		AmmoInClip = StartingBullets; // sets the ammo in clip to whatever the bullets variable is set to in the inspector
-		canShoot = true;
-		_shootTimer = _shootCooldown;
 
-		bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
+		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
+		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
+		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
+		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
+		AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
+		//AmmoCountLabel.Text = $"Weapon:" + (AmmoInClipPistol) + "/" + (AmmoClipSizePistol);
+		//AmmoTotalLabel.Text = $"Total Ammo: " + (TotalPistolBullets) + "/" + (MaxPistolBullets);
+		StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
+		HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
+		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
+		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
+		HealthLabel.Text = $"Health: " + _Health;
+		
+
+
 		Ammo = GD.Load<PackedScene>("res://Scenes/Pickups/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
 		Health = GD.Load<PackedScene>("res://Scenes/Pickups/HealthPack.tscn"); // Health var = the HealthPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up health packs.
-		Pistol = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 		PistolPack = GD.Load<PackedScene>("res://Scenes/Pickups/PistolPack.tscn"); // Pistol var = the PistolPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
-		// _pos = GetNode<Marker3D>("Pistol/Area3D/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
 
-		if (bullet == null)
-        {
-            GD.PrintErr("Failed to load bullet scene!");
-        }
-		 if (_pos == null)
-        {
-            GD.PrintErr("_pos is not assigned! Drag a Node3D into the '_pos' slot in the Inspector.");
-        }
+		
 		
 
 	}
@@ -148,25 +149,28 @@ public override void _Ready()
 
 	public void UpdateAttack()
 	{
-		
-		if (Input.IsActionPressed("Shoot") && _CurrentAttackState != AttackState.Shooting)
-		{
-			if (_gunPistol == null)
-			{
-				GD.Print("No gun picked up!");
-				return;
-			}
-			else
-			{
-			_CurrentAttackState = AttackState.Shooting;
-				
-			}
-		}
-		else if (!Input.IsActionPressed("Shoot") && _CurrentAttackState == AttackState.Shooting)
-		{
-			_CurrentAttackState = AttackState.Idle;
-		}
-		
+		if (pistol == null)
+    {
+        _CurrentAttackState = AttackState.Idle;
+        return;
+    }
+
+    if (Input.IsActionJustPressed("Reload"))
+    {
+        pistol.Reload();
+    }
+
+    if (Input.IsActionPressed("Shoot") &&
+        Input.IsActionJustPressed("Shooting") &&
+        !IsMoving)
+    {
+        _CurrentAttackState = AttackState.Shooting;
+    }
+    else
+    {
+        _CurrentAttackState = AttackState.Idle;
+    }
+
 	}
 
 	private void HandleTurning(float delta)
@@ -195,34 +199,40 @@ public override void _Ready()
 		
 		if (body is AmmoPack ammoPack)
 		{
-			TotalBullets += 10; // adds 10 bullets to the player's bullet count when they collide with the ammo pack
-			if (TotalBullets > MaxBullets) // if the player's bullet count exceeds the max bullets, set it to max bullets
-			{
-				TotalBullets = MaxBullets;
-			}
-			 // removes the ammo pack from the scene after it has been collected
+			pistol.AddAmmo(10);
+			 
 		}
 
 		if (body is HealthPack healthPack)
 		{
+			HealthLabel.Text = $"Health: " + (_Health);
 			_Health += 25; // adds 25 health to the player's health count when they collide with the health pack
 			if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
 			{
+				HealthLabel.Text = $"Health: " + (_Health);
 				_Health = _MaxHealth;
 			}
 			 
 		}
-		if(body is PistolPack pistolPack)
-		{
-			
-				_pos = GetNode<Marker3D>("Pistol/Area3D/POS"); // Grabs the node for the position of the bullet to spawn from, this is a child node of the gun that is attached to the player, it is used to determine where the bullet will spawn when shooting.
-				_gunPistol = Pistol.Instantiate<Node3D>();
-				gunSpawnPOS.AddChild(_gunPistol);
-				// _gunPistol = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn");
-				// gunSpawnPOS.AddChild(_gunPistol.Instantiate<Node3D>());
-				GD.Print("Picked up pistol!");
-			
-		}
+		if (body is PistolPack)
+{
+   			 if (pistol != null)
+       		 return;
+
+    	if (PistolScene == null)
+    	{
+      	  GD.PrintErr("PistolScene could not be loaded!");
+      	  return;
+    	}
+
+    pistol = PistolScene.Instantiate<Pistol>();
+
+    gunSpawnPOS.AddChild(pistol);
+
+    pistol.GlobalTransform = gunSpawnPOS.GlobalTransform;
+
+    GD.Print("Picked up pistol!");
+}
 	}
 
 	private void HandleRunning()
@@ -280,53 +290,6 @@ public override void _Ready()
 
 	
 
-	private void ShootingStance(float delta)
-	{
-		if (AmmoInClip <= 0 && TotalBullets <= 0)
-		{
-			canShoot = false;
-			GD.Print("No Ammo In Clip! Reload!");
-			
-		}
-		else
-		{
-			canShoot = true;
-		}
-		if(Input.IsActionPressed("Reload") && TotalBullets > 0 && AmmoInClip < StartingBullets)
-		{
-			Reload();
-			GD.Print("Reloading!");
-		}
-		if (bullet == null || _pos == null) return;
-		
-			if(Input.IsActionJustPressed("Shooting") && canShoot && !IsMoving && !JustShot)
-				{
-					JustShot = true;
-					AmmoInClip -= 1;
-					var bulletInstance = bullet.Instantiate<Bullet>();
-					GetTree().Root.AddChild(bulletInstance);
-					bulletInstance.GlobalPosition = _pos.GlobalPosition;
-					bulletInstance.GlobalRotation = _pos.GlobalRotation;
-					GD.Print("Shooting!");
-				}
-			
-				
-				
-	}
-	private void Reload()
-	{
-		int bulletsToReload = AmmoClipSize - AmmoInClip;
-		if (TotalBullets >= bulletsToReload)
-		{
-			TotalBullets -= bulletsToReload;
-			AmmoInClip = StartingBullets;
-		}
-		else
-		{
-			AmmoInClip += TotalBullets;
-			TotalBullets = 0;
-		}
-	}
     public override void _Process(double delta)
     {
 		if (_Exhaustion)
@@ -338,24 +301,15 @@ public override void _Ready()
 		{
 			StaminaBar.Modulate = new Color(0, 225, 0);
 		}
-		CanShootLabel.Text = $"Can Shoot?" + (canShoot);
-		AmmoCountLabel.Text = $"Weapon:" + (AmmoInClip) + "/" + (AmmoClipSize);
-		AmmoTotalLabel.Text = $"Total Ammo: " + (TotalBullets) + "/" + (MaxBullets);
-		HealthLabel.Text = $"Health: " + (_Health);
-		ShootingBar.Value = _shootTimer / _shootCooldown * 100;
-		
-		if(JustShot)
+		if(Input.IsActionPressed("Shoot") || Input.IsActionPressed("Reload") || Input.IsActionPressed("Shooting"))
 		{
-			_shootTimer -= (float)delta;
-			if (_shootTimer <= 0)
-			{
-				JustShot = false;
-				_shootTimer = _shootCooldown;
-			}
-		}
+		
 
-
+		if (_MaxStamina >= _Stamina)
+		{
 		StaminaBar.Value = _Stamina / _MaxStamina * 100;
+			
+		}
 		if (_CurrentState != MovementState.Running && _Stamina < _MaxStamina)
 		{
 			StaminaRegen((float)delta);
@@ -375,10 +329,6 @@ public override void _Ready()
 				GD.Print("Flip ready!");
 			}
 		}
-		if (_CurrentAttackState != AttackState.Shooting)
-			{ 
-				canShoot = false;
-			}
 		if (_CurrentState == MovementState.Walking || _CurrentState == MovementState.Running)
 		{
 		IsMoving = true;
@@ -387,9 +337,9 @@ public override void _Ready()
 		{
 		IsMoving = false;	
 		}
+		}
 
-
-    }
+		}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -409,32 +359,33 @@ public override void _Ready()
 			// if enum state is set then it will call the apripriate function
             case MovementState.Walking:
                 HandleForward();
-				GD.Print("Walking");
+				//GD.Print("Walking");
                 break;
 
             case MovementState.Idle:
                 Velocity = Vector3.Zero;
-				GD.Print("Idle");
+				//GD.Print("Idle");
                 break;
 
             case MovementState.Running:
                 HandleRunning();
-				GD.Print("Running");
+				//GD.Print("Running");
                 break;
 
 			case MovementState.Turning:
 				HandleTurning((float)delta);
-				GD.Print("Turning");
+				//GD.Print("Turning");
 				 break;
 
         }
        MoveAndSlide();
-        //MoveAndCollide(Velocity * (float)delta);
+      
+	  if (pistol != null)
 		switch (_CurrentAttackState)
 		{
 			case AttackState.Shooting:
-				ShootingStance((float)delta);
-				GD.Print("Shooting");
+				pistol.Shoot();
+				//GD.Print("Shooting");
 				break;
 		}
 	}
