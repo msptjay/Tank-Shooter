@@ -64,6 +64,7 @@ public partial class Player : CharacterBody3D
 	private PackedScene Health { get; set; }
 	
 	private Node3D _pos;
+	private MeshInstance3D _gun;
 
 	
 
@@ -102,6 +103,7 @@ public override void _Ready()
         {
             GD.PrintErr("_pos is not assigned! Drag a Node3D into the '_pos' slot in the Inspector.");
         }
+		
 
 	}
 
@@ -143,7 +145,16 @@ public override void _Ready()
 		
 		if (Input.IsActionPressed("Shoot") && _CurrentAttackState != AttackState.Shooting)
 		{
+			if (_gun == null)
+			{
+				GD.Print("No gun picked up!");
+				return;
+			}
+			else
+			{
 			_CurrentAttackState = AttackState.Shooting;
+				
+			}
 		}
 		else if (!Input.IsActionPressed("Shoot") && _CurrentAttackState == AttackState.Shooting)
 		{

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://ss7lpluw2wil"]
 
 [ext_resource type="PackedScene" uid="uid://1uqialc1lg8a" path="res://Scenes/Player.tscn" id="1_iukft"]
-[ext_resource type="PackedScene" uid="uid://cwali74ra3pai" path="res://Scenes/AmmoPack.tscn" id="2_qxrlw"]
-[ext_resource type="PackedScene" uid="uid://bsvjgi5ihcdw3" path="res://Scenes/HealthPack.tscn" id="3_wrm1d"]
+[ext_resource type="PackedScene" uid="uid://cwali74ra3pai" path="res://Scenes/Pickups/AmmoPack.tscn" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://bsvjgi5ihcdw3" path="res://Scenes/Pickups/HealthPack.tscn" id="3_wrm1d"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_26iok"]
 

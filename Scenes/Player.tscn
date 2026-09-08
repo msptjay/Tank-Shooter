@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://1uqialc1lg8a"]
 
 [ext_resource type="Script" uid="uid://dwne43rqhuq7e" path="res://Scripts/Player.cs" id="1_hr86y"]
-[ext_resource type="PackedScene" uid="uid://xbk4lvp3g23s" path="res://Scenes/Gun.tscn" id="2_cvnsp"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fn5od"]
 
@@ -19,9 +18,6 @@ shape = SubResource("CapsuleShape3D_fn5od")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=778162078]
 mesh = SubResource("CapsuleMesh_rpqav")
 surface_material_override/0 = SubResource("StandardMaterial3D_kyqiw")
-
-[node name="Gun" parent="." unique_id=1556828431 instance=ExtResource("2_cvnsp")]
-transform = Transform3D(-0.045, 0, -5.157944e-09, 0, 0.142, 0, 3.934025e-09, 0, -0.059, 0.59932977, 0, 0)
 
 [node name="CameraOrigin" type="Node3D" parent="." unique_id=272739175]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
