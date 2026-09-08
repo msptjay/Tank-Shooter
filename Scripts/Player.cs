@@ -87,7 +87,7 @@ public override void _Ready()
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
 		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
 		HealthLabel.Text = $"Health: " + _Health;
-		
+		_MaxHealth = 100;
 
 
 		Ammo = GD.Load<PackedScene>("res://Scenes/Pickups/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
