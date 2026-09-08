@@ -218,7 +218,7 @@ public override void _Ready()
 			 
 		}
 		if (body is PistolPack)
-{
+			{
    			if (pistol != null)
        		 return;
 
