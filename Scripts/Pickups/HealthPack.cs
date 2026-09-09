@@ -20,7 +20,7 @@ public partial class HealthPack : Area3D
 	{
 		if (body is Player player)
 		{
-			player.Pickup(this);
+			player.HealthIncrease(25);
 			GD.Print("Picked up health pack!");
 			QueueFree();
 		}

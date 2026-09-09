@@ -16,6 +16,8 @@ public int TotalAmmo => _totalAmmo;
 public int MagazineSize => _magazineSize;
 public int MaxAmmo => _maxAmmo;
 
+public float ShootTimer => _shootTimer;
+public float ShootCooldown => _shootCooldown;
 	
 
 	// private Pistol pistol;
@@ -109,10 +111,12 @@ public int MaxAmmo => _maxAmmo;
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+
 		 if (_shootTimer > 0)
         _shootTimer -= (float)delta;
 		 if (_shootTimer < 0)
             _shootTimer = 0;
 		}
 	}
+	
 
