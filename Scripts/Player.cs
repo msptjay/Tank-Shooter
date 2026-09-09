@@ -3,13 +3,10 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	enum MovementState {Idle, Walking, Turning, Running, Shooting}
-	enum AttackState {Idle, Shooting, Stabbing}
+	enum MovementState {Idle, Walking, Turning, Running}
+	enum AttackState {Idle, Shooting, Stabbing, Reloading}
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
-	public enum currentGun {Pistol, Knife, MachineGun, Shotgun}
-	
-	private currentGun _CurrentGun;
 
 	 [Export] 
 	 private float camera_Tilt = Mathf.DegToRad(75);
@@ -33,9 +30,11 @@ public partial class Player : CharacterBody3D
 	[Export]
 	private float _flipCooldown = 3.0f;
 
+[Export]
 	private int _Health;
+	[Export]
 	private int _MaxHealth = 100;
-
+	
 	[ExportGroup("Player Bools")]
 	private bool _IsTurning;
 
@@ -44,6 +43,7 @@ public partial class Player : CharacterBody3D
 
 	[ExportGroup("UI")]
 	private ProgressBar StaminaBar;
+	private ProgressBar ShootCooldownBar;
 	private Label HealthLabel;
 	
 
@@ -59,7 +59,7 @@ public partial class Player : CharacterBody3D
 	private MachineGun machineGun;
 
 	private PackedScene Ammo { get; set; }
-	private PackedScene Health { get; set; }
+	private PackedScene HealthP { get; set; }
 	private PackedScene PistolPack { get; set; }
 
 
@@ -97,7 +97,7 @@ public override void _Ready()
 
 
 		Ammo = GD.Load<PackedScene>("res://Scenes/Pickups/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
-		Health = GD.Load<PackedScene>("res://Scenes/Pickups/HealthPack.tscn"); // Health var = the HealthPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up health packs.
+		HealthP = GD.Load<PackedScene>("res://Scenes/Pickups/HealthPack.tscn"); // Health var = the HealthPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up health packs.
 		PistolPack = GD.Load<PackedScene>("res://Scenes/Pickups/PistolPack.tscn"); // Pistol var = the PistolPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 
 		
@@ -108,32 +108,20 @@ public override void _Ready()
 	private void UpdateAmmoUI()
 	{
 
-		if(_CurrentGun == currentGun.Pistol)
-		{
+	
 			if (pistol != null)
 			{
-				AmmoCountLabel.Text = $"Weapon: " + (pistol.AmmoInMagazine) + "/" + (pistol.MagazineSize);
-				AmmoTotalLabel.Text = $"Total Ammo: " + (pistol.TotalAmmo) + "/" + (pistol.MaxAmmo);
+				ShootingBar.Value = pistol.ShootTimer / pistol.ShootCooldown * 100;
+				AmmoCountLabel.Text = $"Weapon: " + pistol.AmmoInMagazine + "/" + pistol.MagazineSize;
+				AmmoTotalLabel.Text = $"Total Ammo: " + pistol.TotalAmmo + "/" + pistol.MaxAmmo;
 			}
 			else
 			{
 				AmmoCountLabel.Text = $"Weapon: 0/0";
 				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
 			}
-		}
-		else if (_CurrentGun == currentGun.MachineGun)
-		{
-			if (machineGun != null)
-			{
-				AmmoCountLabel.Text = $"Weapon: " + (machineGun.AmmoInMagazine) + "/" + (machineGun.MagazineSize);
-				AmmoTotalLabel.Text = $"Total Ammo: " + (machineGun.TotalAmmo) + "/" + (machineGun.MaxAmmo);
-			}
-			else
-			{
-				AmmoCountLabel.Text = $"Weapon: 0/0";
-				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
-			}
-		}
+		
+		
 	}
 
 
@@ -211,20 +199,6 @@ public override void _Ready()
 
 	}
 
-	public void SetCurrentGun(currentGun gun)
-	{
-
-		
-		_CurrentGun = gun;
-		if(pistol != null)
-		{
-			_CurrentGun = currentGun.Pistol;
-		}
-		else if (machineGun != null)
-		{
-			
-		}
-	}
 
 	private void HandleTurning(float delta)
 	{
@@ -244,6 +218,16 @@ public override void _Ready()
 		Velocity = Transform.Basis.Z * walk_velocity;
 	}
 
+	public void HealthIncrease(int healthBonus)
+	{
+		_Health += healthBonus; // adds 25 health to the player's health count when they collide with the health pack
+			HealthLabel.Text = $"Health: " + (_Health);
+			if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
+			{
+				_Health = _MaxHealth;
+				HealthLabel.Text = $"Health: " + (_Health);
+			}
+	}
 	public void Pickup(Area3D body)
 	{
 		
@@ -257,19 +241,19 @@ public override void _Ready()
 			 
 		}
 
-		if (body is HealthPack healthPack)
-		{
-			HealthLabel.Text = $"Health: " + (_Health);
-			_Health += 25; // adds 25 health to the player's health count when they collide with the health pack
-			if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
-			{
-				HealthLabel.Text = $"Health: " + (_Health);
-				_Health = _MaxHealth;
-			}
+		// if (body is HealthPack healthPack)
+		// {
+		// 	_Health += 25; // adds 25 health to the player's health count when they collide with the health pack
+		// 	HealthLabel.Text = $"Health: " + (_Health);
+		// 	if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
+		// 	{
+		// 		_Health = _MaxHealth;
+		// 		HealthLabel.Text = $"Health: " + (_Health);
+		// 	}
 			 
-		}
+		//}
 		if (body is PistolPack)
-		{
+			{
    			if (pistol != null)
        		 return;
 
@@ -287,6 +271,7 @@ public override void _Ready()
 
    			 GD.Print("Picked up pistol!");
 			 UpdateAmmoUI();
+			}
 		if (body is MachineGunPack)
 			{
 				if(machineGun != null)
@@ -302,7 +287,7 @@ public override void _Ready()
 				machineGun.GlobalTransform = machineSpawnPOS.GlobalTransform;
 				UpdateAmmoUI();
 			}
-		}
+		
 	}
 
 	private void HandleRunning()
@@ -325,12 +310,13 @@ public override void _Ready()
 	private void StaminaDrain(float delta)
 	{
 		StaminaBar.Modulate = new Color(0, 225, 0); // Change the color of the stamina bar to green when not exhausted
-		_Stamina -= 25.0f * (float)delta;
+		_Stamina -= 25.0f * delta;
+   		 _Stamina = Mathf.Max(_Stamina, 0);
+
 		if (_Stamina <= 0)
 		{
 			_Exhaustion = true;
 			_CurrentState = MovementState.Idle;
-			GD.Print("Out of stamina!");
 		}
 		
 	}
@@ -362,6 +348,8 @@ public override void _Ready()
 
     public override void _Process(double delta)
     {
+
+
 		if (_Exhaustion)
 		{
 			StaminaBar.Modulate = new Color(225, 0, 0); // Change the color of the stamina bar to red when exhausted
