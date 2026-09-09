@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c4qnn30lqurqt"]
 
-[ext_resource type="Script" uid="uid://cd48hucr20cbt" path="res://Scripts/PistolPack.cs" id="1_u0aa0"]
+[ext_resource type="Script" uid="uid://cd48hucr20cbt" path="res://Scripts/Pickups/PistolPack.cs" id="1_u0aa0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
 

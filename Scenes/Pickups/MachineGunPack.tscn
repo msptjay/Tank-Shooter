@@ -1,16 +1,16 @@
-[gd_scene format=3 uid="uid://bsvjgi5ihcdw3"]
+[gd_scene format=3 uid="uid://w6ut08wlvu02"]
 
-[ext_resource type="Script" uid="uid://bkfot0wakonfe" path="res://Scripts/Pickups/HealthPack.cs" id="1_ra0ct"]
+[ext_resource type="Script" uid="uid://bnqic31w3hljp" path="res://Scripts/Pickups/MachineGunPack.cs" id="1_6vq07"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_vdtgm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lq0kv"]
-albedo_color = Color(1, 0, 0, 1)
+albedo_color = Color(8.663535e-07, 0.64145714, 0.34774137, 1)
 
-[node name="HealthPack" type="Area3D" unique_id=1987952945]
-script = ExtResource("1_ra0ct")
+[node name="PistolPack" type="Area3D" unique_id=1987952945]
+script = ExtResource("1_6vq07")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2013757075]
 shape = SubResource("BoxShape3D_26iok")

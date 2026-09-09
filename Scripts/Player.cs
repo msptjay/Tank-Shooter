@@ -7,6 +7,9 @@ public partial class Player : CharacterBody3D
 	enum AttackState {Idle, Shooting, Stabbing}
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
+	public enum currentGun {Pistol, Knife, MachineGun, Shotgun}
+	
+	private currentGun _CurrentGun;
 
 	 [Export] 
 	 private float camera_Tilt = Mathf.DegToRad(75);
@@ -34,10 +37,8 @@ public partial class Player : CharacterBody3D
 	private int _MaxHealth = 100;
 
 	[ExportGroup("Player Bools")]
-	private bool _IsMoving;
 	private bool _IsTurning;
-	// private bool canShoot;
-	// private bool JustShot = false;
+
 	private bool IsMoving;
 	private bool _Flipped = false;
 
@@ -52,9 +53,11 @@ public partial class Player : CharacterBody3D
 
 	
 	private PackedScene PistolScene;
+	private PackedScene MachineGunScene;
 
 	private Pistol pistol;
-	private Node3D currentGun;
+	private MachineGun machineGun;
+
 	private PackedScene Ammo { get; set; }
 	private PackedScene Health { get; set; }
 	private PackedScene PistolPack { get; set; }
@@ -65,6 +68,7 @@ public partial class Player : CharacterBody3D
 	private Label CanShootLabel;
 	private ProgressBar ShootingBar;
 	private Marker3D gunSpawnPOS;
+	private Marker3D machineSpawnPOS;
 	
 	
 
@@ -73,11 +77,13 @@ public override void _Ready()
 	{
 
 
-
-		 PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
+		MachineGunScene = GD.Load<PackedScene>("res://Scenes/Weapons/MachineGun.tscn");
+		PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 		
 
 		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
+		// machineSpawnPOS = GetNode<Marker3D>("machineSpawnPOS");
+		machineSpawnPOS = gunSpawnPOS;
 		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
 		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
 		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
@@ -95,42 +101,66 @@ public override void _Ready()
 		PistolPack = GD.Load<PackedScene>("res://Scenes/Pickups/PistolPack.tscn"); // Pistol var = the PistolPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 
 		
-		
+		AmmoCountLabel.Text = $"Weapon: 0/0";
+		AmmoTotalLabel.Text = $"Total Ammo: 0/0";
 
 	}
 	private void UpdateAmmoUI()
 	{
-		if (pistol != null)
+
+		if(_CurrentGun == currentGun.Pistol)
 		{
-			AmmoCountLabel.Text = $"Weapon: " + (pistol.AmmoInMagazine) + "/" + (pistol.MagazineSize);
-			AmmoTotalLabel.Text = $"Total Ammo: " + (pistol.TotalAmmo) + "/" + (pistol.MaxAmmo);
+			if (pistol != null)
+			{
+				AmmoCountLabel.Text = $"Weapon: " + (pistol.AmmoInMagazine) + "/" + (pistol.MagazineSize);
+				AmmoTotalLabel.Text = $"Total Ammo: " + (pistol.TotalAmmo) + "/" + (pistol.MaxAmmo);
+			}
+			else
+			{
+				AmmoCountLabel.Text = $"Weapon: 0/0";
+				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+			}
 		}
-		else
+		else if (_CurrentGun == currentGun.MachineGun)
 		{
-			AmmoCountLabel.Text = $"Weapon: 0/0";
-			AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+			if (machineGun != null)
+			{
+				AmmoCountLabel.Text = $"Weapon: " + (machineGun.AmmoInMagazine) + "/" + (machineGun.MagazineSize);
+				AmmoTotalLabel.Text = $"Total Ammo: " + (machineGun.TotalAmmo) + "/" + (machineGun.MaxAmmo);
+			}
+			else
+			{
+				AmmoCountLabel.Text = $"Weapon: 0/0";
+				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+			}
 		}
-		
 	}
 
 
 	public void UpdateMovement()
 	{
 		
-		//The player will only "Run forward" if they are not exhausted, and if they are already pressing the move forward button, and if they are not currently shooting.
+		if (Input.IsActionPressed("Aiming") || Input.IsActionPressed("Shooting"))
+		{
+			IsMoving = false;
+			_CurrentState = MovementState.Idle;
+			Velocity = Vector3.Zero;
+			return;
+		}
 
 
 		// if the input for said movement is pressed then the state will be set to that movement, if not it will be set to idle
-		if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward") && _CurrentAttackState != AttackState.Shooting)
+		if (Input.IsActionPressed("Run_Forward") && !_Exhaustion && Input.IsActionPressed("Move_Forward"))
 		{
 			_CurrentState = MovementState.Running;
+		
 		}
 
 		// If they are not doing the above, it will check if they do this next.
-		else if (Input.IsActionPressed("Move_Forward") && _CurrentAttackState != AttackState.Shooting || Input.IsActionPressed("Move_Backward") && _CurrentAttackState != AttackState.Shooting)
+		else if (Input.IsActionPressed("Move_Forward") && _CurrentAttackState != AttackState.Shooting || Input.IsActionPressed("Move_Backward"))
 		{
 			_CurrentState = MovementState.Walking;
-
+			
 			
              // if the above if statement is true, they will then do this if conditions are met.
 			if (Input.IsActionPressed("Move_Backward") && _CurrentState == MovementState.Walking && Input.IsActionPressed("Flip") && !_Flipped)
@@ -141,28 +171,36 @@ public override void _Ready()
 		else
 		{
 			_CurrentState = MovementState.Idle;
+		
 		}
 		
+		if (_CurrentState == MovementState.Walking || _CurrentState == MovementState.Running)
+		{
+		IsMoving = true;
+		}
+		else
+		{
+		IsMoving = false;	
+		}
 		
 	}
 
 	public void UpdateAttack()
 	{
 		if (pistol == null)
-    {
+   	 	{
         _CurrentAttackState = AttackState.Idle;
         return;
-    }
+		}
 
-    if (Input.IsActionJustPressed("Reload"))
-    {
-        pistol.Reload();
-		UpdateAmmoUI();
-    }
+		if (Input.IsActionJustPressed("Reload"))
+		{
+			pistol.Reload();
+			UpdateAmmoUI();
+		}
 
-    if (Input.IsActionPressed("Shoot") &&
-        Input.IsActionJustPressed("Shooting") &&
-        !IsMoving)
+	
+    if (Input.IsActionPressed("Aiming") && Input.IsActionJustPressed("Shooting") && !IsMoving)
     {
         _CurrentAttackState = AttackState.Shooting;
     }
@@ -171,6 +209,21 @@ public override void _Ready()
         _CurrentAttackState = AttackState.Idle;
     }
 
+	}
+
+	public void SetCurrentGun(currentGun gun)
+	{
+
+		
+		_CurrentGun = gun;
+		if(pistol != null)
+		{
+			_CurrentGun = currentGun.Pistol;
+		}
+		else if (machineGun != null)
+		{
+			
+		}
 	}
 
 	private void HandleTurning(float delta)
@@ -185,13 +238,10 @@ public override void _Ready()
 	}
 	private void HandleForward()
 	{
-	
+
 		float forwardDirection = Input.GetAxis("Move_Forward","Move_Backward");
 		float walk_velocity = forwardDirection * _WalkSpeed;
 		Velocity = Transform.Basis.Z * walk_velocity;
-
-		
-		
 	}
 
 	public void Pickup(Area3D body)
@@ -219,7 +269,7 @@ public override void _Ready()
 			 
 		}
 		if (body is PistolPack)
-			{
+		{
    			if (pistol != null)
        		 return;
 
@@ -236,7 +286,23 @@ public override void _Ready()
     		pistol.GlobalTransform = gunSpawnPOS.GlobalTransform;
 
    			 GD.Print("Picked up pistol!");
-}
+			 UpdateAmmoUI();
+		if (body is MachineGunPack)
+			{
+				if(machineGun != null)
+				return;
+
+				if (MachineGunScene == null)
+				{
+					GD.PrintErr("Can't load in machine gun scene");
+					return;
+				}
+				machineGun = MachineGunScene.Instantiate<MachineGun>();
+				machineSpawnPOS.AddChild(machineGun);
+				machineGun.GlobalTransform = machineSpawnPOS.GlobalTransform;
+				UpdateAmmoUI();
+			}
+		}
 	}
 
 	private void HandleRunning()
@@ -332,14 +398,7 @@ public override void _Ready()
 				GD.Print("Flip ready!");
 			}
 		}
-		if (_CurrentState == MovementState.Walking || _CurrentState == MovementState.Running)
-		{
-		IsMoving = true;
-		}
-		else
-		{
-		IsMoving = false;	
-		}
+		
 		
 		
 	}
@@ -348,14 +407,11 @@ public override void _Ready()
 	{
 		UpdateMovement();
 		UpdateAttack();
-		if (Input.IsActionPressed("Turn_Right") && !Input.IsActionPressed("Shoot") || Input.IsActionPressed("Turn_Left") && !Input.IsActionPressed("Shoot"))
+		if (!Input.IsActionPressed("Aiming") && !Input.IsActionPressed("Shooting") && (Input.IsActionPressed("Turn_Right") || Input.IsActionPressed("Turn_Left")))
 		{
-		// IsMoving = true;
-        HandleTurning((float)delta);
-		 Velocity = Vector3.Zero;
+			HandleTurning((float)delta);
+			Velocity = Vector3.Zero;
 		}
-		// else
-		// IsMoving = false;
 
         switch (_CurrentState)
         {
@@ -386,10 +442,10 @@ public override void _Ready()
 	  if (pistol != null)
 		switch (_CurrentAttackState)
 		{
+			
 			case AttackState.Shooting:
 				pistol.Shoot();
 				UpdateAmmoUI();
-				//GD.Print("Shooting");
 				break;
 		}
 	}

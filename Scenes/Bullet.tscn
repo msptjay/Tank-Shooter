@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dcie8ag24aoga"]
 
-[ext_resource type="Script" uid="uid://dwh6nq2x2bhk4" path="res://Scripts/Bullet.cs" id="1_vlxeq"]
+[ext_resource type="Script" uid="uid://dwh6nq2x2bhk4" path="res://Scripts/Weapons/Bullet.cs" id="1_vlxeq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
 
