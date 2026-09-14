@@ -31,6 +31,11 @@ public void ItemPickup(Area3D body)
 		{
 			player.HealthIncrease(25);
 		}
+		
+
+	}
+public void WeaponPickup(Area3D body)
+	{
 		if(body is PistolPack pistolPack)
 		{
 			// if (pistol != null)
@@ -51,7 +56,26 @@ public void ItemPickup(Area3D body)
    			//  GD.Print("Picked up pistol!");
 			//  UpdateAmmoUI();
 		}
+		if(body is MachineGunPack machinegunPack)
+		{
+			// if (pistol != null)
+       		//  return;
 
+    		// if (PistolScene == null)
+    		// {
+      	 	// GD.PrintErr("PistolScene could not be loaded!");
+      	 	//  return;
+    		// }
+
+    		// pistol = PistolScene.Instantiate<Pistol>();
+
+    		// gunSpawnPOS.AddChild(pistol);
+
+    		// pistol.GlobalTransform = gunSpawnPOS.GlobalTransform;
+
+   			//  GD.Print("Picked up pistol!");
+			//  UpdateAmmoUI();
+		}
 	}
 
 }
