@@ -105,7 +105,7 @@ public override void _Ready()
 		AmmoTotalLabel.Text = $"Total Ammo: 0/0";
 
 	}
-	private void UpdateAmmoUI()
+	public void UpdateAmmoUI()
 	{
 
 	
