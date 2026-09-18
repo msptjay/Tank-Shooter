@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://cxladjrpypd0j"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fn5od"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_rpqav"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kyqiw"]
+albedo_color = Color(3.1766297e-06, 0.5960673, 0.7529914, 1)
+
+[node name="Player" type="CharacterBody3D" unique_id=546780480]
+
+[node name="GunSpawnPOS" type="Marker3D" parent="." unique_id=605052019]
+transform = Transform3D(-0.05, 0, -4.371139e-09, 0, 0.05, 0, 4.371139e-09, 0, -0.05, 0.6413209, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=208472553]
+shape = SubResource("CapsuleShape3D_fn5od")
+debug_color = Color(0.99718744, 0.52282023, 0.61607784, 0.41960785)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=778162078]
+mesh = SubResource("CapsuleMesh_rpqav")
+surface_material_override/0 = SubResource("StandardMaterial3D_kyqiw")
+
+[node name="CameraOrigin" type="Node3D" parent="." unique_id=272739175]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraOrigin" unique_id=1821499337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34052193, -0.31603652, 0.02708608)
+spring_length = 3.0
+margin = 0.5
+
+[node name="Camera3D" type="Camera3D" parent="CameraOrigin/SpringArm3D" unique_id=469148521]
+transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0.6073588, 1.0006021, 1.791513)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1220579666]
+offset_left = 25.0
+offset_top = 10.0
+offset_right = 175.0
+offset_bottom = 160.0
+
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=1296981824]
+layout_mode = 2
+text = "Stamina Bar"
+
+[node name="StaminaBar" type="ProgressBar" parent="VBoxContainer" unique_id=249002327]
+modulate = Color(2.2241454, 0, 0, 1)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1092228099]
+layout_mode = 2
+text = "Shoot Cooldown"
+
+[node name="ShootBar" type="ProgressBar" parent="VBoxContainer" unique_id=1280140432]
+layout_mode = 2
+
+[node name="Bool" type="Label" parent="VBoxContainer" unique_id=1013121030]
+layout_mode = 2
+text = "Can Shoot"
+
+[node name="HealthLabel" type="Label" parent="VBoxContainer" unique_id=2095419027]
+layout_mode = 2
+text = "Health :"
+
+[node name="AmmoCountLabel" type="Label" parent="VBoxContainer" unique_id=960588488]
+layout_mode = 2
+text = "Ammo :"
+
+[node name="AmmoTotalLabel" type="Label" parent="VBoxContainer" unique_id=1701148416]
+layout_mode = 2
+text = "Total Ammo :"

@@ -13,6 +13,12 @@ size = Vector3(60, 1, 60)
 [sub_resource type="BoxMesh" id="BoxMesh_j0tj5"]
 size = Vector3(60, 2, 60)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_26iok"]
+size = Vector3(60, 10, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_26iok"]
+size = Vector3(60, 10, 1)
+
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_vdtgm"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_26iok"]
@@ -41,6 +47,24 @@ shadow_enabled = true
 
 [node name="Player" parent="." unique_id=546780480 instance=ExtResource("1_iukft")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Walls" type="StaticBody3D" parent="." unique_id=1840884376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.051935196, 5.2802477, -29.564379)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls" unique_id=956867547]
+shape = SubResource("BoxShape3D_26iok")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls" unique_id=504581368]
+mesh = SubResource("BoxMesh_26iok")
+
+[node name="Walls" type="StaticBody3D" parent="Walls" unique_id=197891022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 59.11739)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Walls" unique_id=1048918365]
+shape = SubResource("BoxShape3D_26iok")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Walls" unique_id=229133271]
+mesh = SubResource("BoxMesh_26iok")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1879076046]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2039003, 2.166495, 0)
