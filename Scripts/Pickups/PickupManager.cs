@@ -34,6 +34,8 @@ public void ItemPickup(Area3D body)
 		
 
 	}
+
+
 public void WeaponPickup(Area3D body)
 	{
 		if(body is PistolPack pistolPack)
