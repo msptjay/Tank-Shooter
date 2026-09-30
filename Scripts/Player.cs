@@ -7,6 +7,7 @@ public partial class Player : CharacterBody3D
 	enum AttackState {Idle, Shooting, Stabbing, Reloading}
 	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
+	private HudComponent Hud;
 
 	 [Export] 
 	 private float camera_Tilt = Mathf.DegToRad(75);
@@ -30,10 +31,17 @@ public partial class Player : CharacterBody3D
 	[Export]
 	private float _flipCooldown = 3.0f;
 
-[Export]
-	private int _Health;
-	[Export]
-	private int _MaxHealth = 100;
+
+	public float Stamina => _Stamina;
+	public float MaxStamina => _MaxStamina;
+	public bool Exhaustion => _Exhaustion;
+
+
+
+// [Export]
+// 	private int _Health;
+// 	[Export]
+// 	private int _MaxHealth = 100;
 	
 	[ExportGroup("Player Bools")]
 	private bool _IsTurning;
@@ -41,10 +49,10 @@ public partial class Player : CharacterBody3D
 	private bool IsMoving;
 	private bool _Flipped = false;
 
-	[ExportGroup("UI")]
-	private ProgressBar StaminaBar;
-	private ProgressBar ShootCooldownBar;
-	private Label HealthLabel;
+	// [ExportGroup("UI")]
+	// private ProgressBar StaminaBar;
+	// private ProgressBar ShootCooldownBar;
+	// private Label HealthLabel;
 	
 
 	private int Score = 0;
@@ -63,10 +71,12 @@ public partial class Player : CharacterBody3D
 	private PackedScene PistolPack { get; set; }
 
 
-	private Label AmmoCountLabel;
-	private Label AmmoTotalLabel;
-	private Label CanShootLabel;
-	private ProgressBar ShootingBar;
+	// private Label AmmoCountLabel;
+	// private Label AmmoTotalLabel;
+	// private Label CanShootLabel;
+	// private ProgressBar ShootingBar;
+
+
 	private Marker3D gunSpawnPOS;
 	private Marker3D machineSpawnPOS;
 	
@@ -77,6 +87,8 @@ public override void _Ready()
 	{
 
 
+		Hud = GetNode<HudComponent>("HudComponent");
+
 		MachineGunScene = GD.Load<PackedScene>("res://Scenes/Weapons/MachineGun.tscn");
 		PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 		
@@ -84,16 +96,16 @@ public override void _Ready()
 		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
 		// machineSpawnPOS = GetNode<Marker3D>("machineSpawnPOS");
 		machineSpawnPOS = gunSpawnPOS;
-		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
-		ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
-		AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
-		StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
-		HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
+		// CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
+		// ShootingBar = GetNode<ProgressBar>("VBoxContainer/ShootBar"); // grabs the node for the shooting bar from the inspector and assigns it to the ShootingBar variable
+		// AmmoTotalLabel= GetNode<Label>("VBoxContainer/AmmoTotalLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
+		// AmmoCountLabel = GetNode<Label>("VBoxContainer/AmmoCountLabel"); // grabs the node for the ammo count bar from the inspector and assigns it to the AmmoCountBar variable
+		// StaminaBar = GetNode<ProgressBar>("VBoxContainer/StaminaBar"); //Grabs the Node for the stamina bar from the inspector and assigns it to the StaminaBar variable
+		// HealthLabel = GetNode<Label>("VBoxContainer/HealthLabel"); // grabs the node for the Health bar from the inspector and assigns it to the HealthBar variable
+		// HealthLabel.Text = $"Health: " + _Health;
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
-		_Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
-		HealthLabel.Text = $"Health: " + _Health;
-		_MaxHealth = 100;
+		// _Health = _MaxHealth; // whatever the max health is set to in the inspector will be the starting health for the player
+		// _MaxHealth = 100;
 
 
 		Ammo = GD.Load<PackedScene>("res://Scenes/Pickups/AmmoPack.tscn"); // Ammo var = the AmmoPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up ammo packs.
@@ -101,28 +113,28 @@ public override void _Ready()
 		PistolPack = GD.Load<PackedScene>("res://Scenes/Pickups/PistolPack.tscn"); // Pistol var = the PistolPack node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
 
 		
-		AmmoCountLabel.Text = $"Weapon: 0/0";
-		AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+		// AmmoCountLabel.Text = $"Weapon: 0/0";
+		// AmmoTotalLabel.Text = $"Total Ammo: 0/0";
 
 	}
-	public void UpdateAmmoUI()
-	{
+	// public void UpdateAmmoUI()
+	// {
 
 	
-			if (pistol != null)
-			{
-				ShootingBar.Value = pistol.ShootTimer / pistol.ShootCooldown * 100;
-				AmmoCountLabel.Text = $"Weapon: " + pistol.AmmoInMagazine + "/" + pistol.MagazineSize;
-				AmmoTotalLabel.Text = $"Total Ammo: " + pistol.TotalAmmo + "/" + pistol.MaxAmmo;
-			}
-			else
-			{
-				AmmoCountLabel.Text = $"Weapon: 0/0";
-				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
-			}
+	// 		if (pistol != null)
+	// 		{
+	// 			ShootingBar.Value = pistol.ShootTimer / pistol.ShootCooldown * 100;
+	// 			AmmoCountLabel.Text = $"Weapon: " + pistol.AmmoInMagazine + "/" + pistol.MagazineSize;
+	// 			AmmoTotalLabel.Text = $"Total Ammo: " + pistol.TotalAmmo + "/" + pistol.MaxAmmo;
+	// 		}
+	// 		else
+	// 		{
+	// 			AmmoCountLabel.Text = $"Weapon: 0/0";
+	// 			AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+	// 		}
 		
 		
-	}
+	// }
 
 
 	public void UpdateMovement()
@@ -184,7 +196,7 @@ public override void _Ready()
 		if (Input.IsActionJustPressed("Reload"))
 		{
 			pistol.Reload();
-			UpdateAmmoUI();
+			Hud.UpdateAmmoUI();
 		}
 
 	
@@ -218,16 +230,16 @@ public override void _Ready()
 		Velocity = Transform.Basis.Z * walk_velocity;
 	}
 
-	public void HealthIncrease(int healthBonus)
-	{
-		_Health += healthBonus; // adds 25 health to the player's health count when they collide with the health pack
-			HealthLabel.Text = $"Health: " + (_Health);
-			if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
-			{
-				_Health = _MaxHealth;
-				HealthLabel.Text = $"Health: " + (_Health);
-			}
-	}
+	// public void HealthIncrease(int healthBonus)
+	// {
+	// 	_Health += healthBonus; // adds 25 health to the player's health count when they collide with the health pack
+	// 		HealthLabel.Text = $"Health: " + (_Health);
+	// 		if (_Health > _MaxHealth) // if the player's health count exceeds the max health, set it to max health
+	// 		{
+	// 			_Health = _MaxHealth;
+	// 			HealthLabel.Text = $"Health: " + (_Health);
+	// 		}
+	// }
 	public void Pickup(Area3D body)
 	{
 		
@@ -236,7 +248,7 @@ public override void _Ready()
 			if (pistol != null)
     		{
         		pistol.AddAmmo(10);
-				UpdateAmmoUI();
+				Hud.UpdateAmmoUI();
     		}
 			 
 		}
@@ -270,7 +282,7 @@ public override void _Ready()
     		pistol.GlobalTransform = gunSpawnPOS.GlobalTransform;
 
    			 GD.Print("Picked up pistol!");
-			 UpdateAmmoUI();
+			 Hud.UpdateAmmoUI();
 			}
 		if (body is MachineGunPack)
 			{
@@ -285,7 +297,7 @@ public override void _Ready()
 				machineGun = MachineGunScene.Instantiate<MachineGun>();
 				machineSpawnPOS.AddChild(machineGun);
 				machineGun.GlobalTransform = machineSpawnPOS.GlobalTransform;
-				UpdateAmmoUI();
+				Hud.UpdateAmmoUI();
 			}
 		
 	}
@@ -309,7 +321,7 @@ public override void _Ready()
 
 	private void StaminaDrain(float delta)
 	{
-		StaminaBar.Modulate = new Color(0, 225, 0); // Change the color of the stamina bar to green when not exhausted
+		// StaminaBar.Modulate = new Color(0, 225, 0); // Change the color of the stamina bar to green when not exhausted
 		_Stamina -= 25.0f * delta;
    		 _Stamina = Mathf.Max(_Stamina, 0);
 
@@ -332,17 +344,17 @@ public override void _Ready()
 			}
 		}
 	}
-	private void TakeDamage(int damage)
-	{
-		_Health -= damage;
-		if (_Health <= 0)
-		{
-			_Health = 0;
-			GD.Print("Player is dead!");
-			// You can add additional logic here for when the player dies, such as respawning or ending the game.
-		}
-		HealthLabel.Text = $"Health: " + (_Health);
-	}
+	// private void TakeDamage(int damage)
+	// {
+	// 	_Health -= damage;
+	// 	if (_Health <= 0)
+	// 	{
+	// 		_Health = 0;
+	// 		GD.Print("Player is dead!");
+	// 		// You can add additional logic here for when the player dies, such as respawning or ending the game.
+	// 	}
+	// 	HealthLabel.Text = $"Health: " + (_Health);
+	// }
 
 	
 
@@ -350,23 +362,23 @@ public override void _Ready()
     {
 
 
-		if (_Exhaustion)
-		{
-			StaminaBar.Modulate = new Color(225, 0, 0); // Change the color of the stamina bar to red when exhausted
+		// if (_Exhaustion)
+		// {
+		// 	StaminaBar.Modulate = new Color(225, 0, 0); // Change the color of the stamina bar to red when exhausted
 
-		}
-		else
-		{
-			StaminaBar.Modulate = new Color(0, 225, 0);
-		}
+		// }
+		// else
+		// {
+		// 	StaminaBar.Modulate = new Color(0, 225, 0);
+		// }
 	
 		
 
-		if (_MaxStamina >= _Stamina)
-		{
-		StaminaBar.Value = _Stamina / _MaxStamina * 100;
+		// if (_MaxStamina >= _Stamina)
+		// {
+		// StaminaBar.Value = _Stamina / _MaxStamina * 100;
 			
-		}
+		// }
 		if (_CurrentState != MovementState.Running && _Stamina < _MaxStamina)
 		{
 			StaminaRegen((float)delta);
@@ -433,7 +445,7 @@ public override void _Ready()
 			
 			case AttackState.Shooting:
 				pistol.Shoot();
-				UpdateAmmoUI();
+				Hud.UpdateAmmoUI();
 				break;
 		}
 	}

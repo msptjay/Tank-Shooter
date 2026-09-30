@@ -5,6 +5,8 @@ public partial class PickupManager : Node
 {
 	private Player player;
 	private Pistol pistol;
+	private HudComponent Hud;
+	private HealthComponent healthComponent;
 	private PackedScene AmmoPack { get; set; }
 	private PackedScene HealthPack { get; set; }
 	private PackedScene PistolPack { get; set; }
@@ -12,6 +14,9 @@ public partial class PickupManager : Node
 
 public override void _Ready()
 {
+
+healthComponent = GetParent().GetNode<HealthComponent>("HealthComponent");
+Hud = GetParent().GetNode<HudComponent>("HudComponent");
 AmmoPack = GD.Load<PackedScene>("res://Scenes/Pickups/AmmoPack.tscn");
 HealthPack = GD.Load<PackedScene>("res://Scenes/Pickups/HealthPack.tscn");
 PistolPack = GD.Load<PackedScene>("res://Scenes/Pickups/PistolPack.tscn");
@@ -24,12 +29,12 @@ public void ItemPickup(Area3D body)
 			if (pistol != null)
     		{
         		pistol.AddAmmo(10);
-				player.UpdateAmmoUI();
+				Hud.UpdateAmmoUI();
     		}
 		}
 		if (body is HealthPack healthPack)
 		{
-			player.HealthIncrease(25);
+			healthComponent.HealthIncrease(25);
 		}
 		
 

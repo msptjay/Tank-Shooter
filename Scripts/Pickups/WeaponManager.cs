@@ -5,7 +5,7 @@ public partial class WeaponManager : Node
 {
 
 
-	private Node currentWeapon;
+	private Node3D currentWeapon;
 	private Pistol pistol;
 	private MachineGun machineGun;
 
@@ -15,7 +15,11 @@ public void currentGun()
 	{
 		if (pistol != null)
 		{
-			
+			currentWeapon = pistol;
+		}
+		else
+		{
+			currentWeapon = machineGun;
 		}
 	}
 

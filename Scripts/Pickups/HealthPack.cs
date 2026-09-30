@@ -4,9 +4,11 @@ using System;
 public partial class HealthPack : Area3D
 {
 	public bool monitoring = true;
+	private HealthComponent healthComponent;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		//healthComponent = GetParent().GetNode<HealthComponent>("HealthComponent");
 		BodyEntered += OnBodyEntered;
 	}
 
@@ -20,7 +22,7 @@ public partial class HealthPack : Area3D
 	{
 		if (body is Player player)
 		{
-			player.HealthIncrease(25);
+			//healthComponent.HealthIncrease(25);
 			GD.Print("Picked up health pack!");
 			QueueFree();
 		}
