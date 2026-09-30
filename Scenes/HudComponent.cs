@@ -22,6 +22,7 @@ public partial class HudComponent : Control
 	{
 
 		healthComponent = GetParent().GetNode<HealthComponent>("HealthComponent");
+		player = GetParent<Player>();
 
 
 		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
@@ -64,28 +65,28 @@ public partial class HudComponent : Control
 	
 	public override void _Process(double delta)
 	{
-		// // if(player.StaminaDrain())
-		// // {
-		// // 	StaminaBar.Modulate = new Color(0, 225, 0);
-		// // }
+		if(player.Draining)
+		{
+			StaminaBar.Modulate = new Color(0, 225, 0);
+		}
 
-		// if (player.Exhaustion)
-		// {
-		// 	StaminaBar.Modulate = new Color(225, 0, 0); // Change the color of the stamina bar to red when exhausted
+		if (player.Exhaustion)
+		{
+			StaminaBar.Modulate = new Color(225, 0, 0); // Change the color of the stamina bar to red when exhausted
 
-		// }
-		// else
-		// {
-		// 	StaminaBar.Modulate = new Color(0, 225, 0);
-		// }
+		}
+		else
+		{
+			StaminaBar.Modulate = new Color(0, 225, 0);
+		}
 	
 		
 
-		// if (player.MaxStamina >= player.Stamina)
-		// {
-		// StaminaBar.Value = player.Stamina / player.MaxStamina * 100;
+		if (player.MaxStamina >= player.Stamina)
+		{
+		StaminaBar.Value = player.Stamina / player.MaxStamina * 100;
 			
-		// }
+		}
 		
 	}
 }

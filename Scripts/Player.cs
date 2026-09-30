@@ -30,7 +30,9 @@ public partial class Player : CharacterBody3D
 	private bool _Exhaustion = false;
 	[Export]
 	private float _flipCooldown = 3.0f;
+	private bool draining;
 
+	public bool Draining => draining;
 
 	public float Stamina => _Stamina;
 	public float MaxStamina => _MaxStamina;
@@ -38,10 +40,7 @@ public partial class Player : CharacterBody3D
 
 
 
-// [Export]
-// 	private int _Health;
-// 	[Export]
-// 	private int _MaxHealth = 100;
+
 	
 	[ExportGroup("Player Bools")]
 	private bool _IsTurning;
@@ -49,10 +48,7 @@ public partial class Player : CharacterBody3D
 	private bool IsMoving;
 	private bool _Flipped = false;
 
-	// [ExportGroup("UI")]
-	// private ProgressBar StaminaBar;
-	// private ProgressBar ShootCooldownBar;
-	// private Label HealthLabel;
+
 	
 
 	private int Score = 0;
@@ -71,10 +67,7 @@ public partial class Player : CharacterBody3D
 	private PackedScene PistolPack { get; set; }
 
 
-	// private Label AmmoCountLabel;
-	// private Label AmmoTotalLabel;
-	// private Label CanShootLabel;
-	// private ProgressBar ShootingBar;
+
 
 
 	private Marker3D gunSpawnPOS;
@@ -321,6 +314,7 @@ public override void _Ready()
 
 	private void StaminaDrain(float delta)
 	{
+		draining = true;
 		// StaminaBar.Modulate = new Color(0, 225, 0); // Change the color of the stamina bar to green when not exhausted
 		_Stamina -= 25.0f * delta;
    		 _Stamina = Mathf.Max(_Stamina, 0);
@@ -386,8 +380,13 @@ public override void _Ready()
 		if (_CurrentState == MovementState.Running)
 		{
 			StaminaDrain((float)delta);
+
 			
 		}
+		else
+		draining = false;
+
+
 		if(_Flipped)
 		{
 			_flipCooldown -= (float)delta;
