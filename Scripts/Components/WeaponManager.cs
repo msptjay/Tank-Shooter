@@ -4,19 +4,18 @@ using System;
 public partial class WeaponManager : Node
 {
 
-	public Resource _weaponData;
 	private Node3D currentWeapon;
 
 	public Node3D CurrentWeapon => currentWeapon;
 	private Pistol pistol;
 	private MachineGun machineGun;
 
-	// private int _totalAmmo;
-	// private int _magazineSize = 6;
-	// private int _maxAmmo = 60;
-	// private int _ammoInMagazine;
-	// private float _shootCooldown = 0.5f;
-	// private float _shootTimer = 0;
+	private int _totalAmmo;
+	private int _magazineSize = 6;
+	private int _maxAmmo = 60;
+	private int _ammoInMagazine;
+	private float _shootCooldown = 0.5f;
+	private float _shootTimer = 0;
 
 public int AmmoInMagazine => _ammoInMagazine;
 public int TotalAmmo => _totalAmmo;
@@ -36,27 +35,11 @@ public float ShootCooldown => _shootCooldown;
 	public override void _Ready()
 	{
 
-		_WeaponData = GD.Load<WeaponData>("res://Scenes/WeaponData.tres");
 		_bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
 		_Muzzle = GetNode<Marker3D>("Area3D/POS");
 		
 		_totalAmmo = 10;
 		_ammoInMagazine = _magazineSize;
-
-		if (_WeaponData is WeaponData weaponData == null)
-		{
-			GD.PrintErr("WeaponData is not assigned!");
-			return;
-		}
-		else
-		{
-			GD.print(weaponData._totalAmmo);
-			GD.print(weaponData._magazineSize);
-			GD.print(weaponData._maxAmmo);
-			GD.print(weaponData._ammoInMagazine);
-			GD.print(weaponData._shootCooldown);
-			GD.print(weaponData._shootTimer);
-		}
 
 
 		if (_bullet == null)
