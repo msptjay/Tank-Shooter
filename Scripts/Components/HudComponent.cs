@@ -6,6 +6,7 @@ public partial class HudComponent : Control
 
 	private HealthComponent healthComponent;
 	private Player player;
+	private WeaponManager weaponManager;
 
 	[ExportGroup("UI")]
 	private ProgressBar StaminaBar;
@@ -20,9 +21,10 @@ public partial class HudComponent : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-
+		weaponManager = GetParent().GetNode<WeaponManager>("WeaponManager");
 		healthComponent = GetParent().GetNode<HealthComponent>("HealthComponent");
 		player = GetParent<Player>();
+
 
 
 		CanShootLabel = GetNode<Label>("VBoxContainer/Bool");
@@ -42,17 +44,17 @@ public partial class HudComponent : Control
 	{
 
 	
-			// if (pistol != null)
-			// {
-			// 	ShootingBar.Value = pistol.ShootTimer / pistol.ShootCooldown * 100;
-			// 	AmmoCountLabel.Text = $"Weapon: " + pistol.AmmoInMagazine + "/" + pistol.MagazineSize;
-			// 	AmmoTotalLabel.Text = $"Total Ammo: " + pistol.TotalAmmo + "/" + pistol.MaxAmmo;
-			// }
-			// else
-			// {
-			// 	AmmoCountLabel.Text = $"Weapon: 0/0";
-			// 	AmmoTotalLabel.Text = $"Total Ammo: 0/0";
-			// }
+			if (weaponManager.CurrentWeapon != null)
+			{
+				ShootingBar.Value = weaponManager.CurrentWeapon.ShootTimer / weaponManager.CurrentWeapon.ShootCooldown * 100;
+				AmmoCountLabel.Text = $"Weapon: " + weaponManager.CurrentWeapon.AmmoInMagazine + "/" + weaponManager.CurrentWeapon.MagazineSize;
+				AmmoTotalLabel.Text = $"Total Ammo: " + weaponManager.CurrentWeapon.TotalAmmo + "/" + weaponManager.CurrentWeapon.MaxAmmo;
+			}
+			else
+			{
+				AmmoCountLabel.Text = $"Weapon: 0/0";
+				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+			}
 		
 		
 	}

@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://1uqialc1lg8a"]
 
-[ext_resource type="Script" uid="uid://dwne43rqhuq7e" path="res://Scripts/Player.cs" id="1_hr86y"]
-[ext_resource type="Script" uid="uid://d3jirm53l3f3s" path="res://Scenes/HealthComponent.cs" id="2_dewec"]
+[ext_resource type="Script" uid="uid://dwne43rqhuq7e" path="res://Scripts/Nodes/Player.cs" id="1_hr86y"]
+[ext_resource type="Script" uid="uid://d3jirm53l3f3s" path="res://Scripts/Components/HealthComponent.cs" id="2_dewec"]
 [ext_resource type="Script" uid="uid://d06eqrdvo4vjo" path="res://Scripts/Pickups/PickupManager.cs" id="3_nn08x"]
-[ext_resource type="Script" uid="uid://c2hjogrikp7qu" path="res://Scenes/HudComponent.cs" id="4_nn08x"]
+[ext_resource type="Script" uid="uid://3b5u2pi8j85t" path="res://Scripts/Components/WeaponManager.cs" id="4_5ixxa"]
+[ext_resource type="Script" uid="uid://c2hjogrikp7qu" path="res://Scripts/Components/HudComponent.cs" id="4_nn08x"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fn5od"]
 
@@ -20,6 +21,9 @@ script = ExtResource("2_dewec")
 
 [node name="PickupManager" type="Node3D" parent="." unique_id=510813409]
 script = ExtResource("3_nn08x")
+
+[node name="WeaponManager" type="Node3D" parent="." unique_id=141049309]
+script = ExtResource("4_5ixxa")
 
 [node name="HitboxComponent" type="Area3D" parent="." unique_id=1426016576]
 
