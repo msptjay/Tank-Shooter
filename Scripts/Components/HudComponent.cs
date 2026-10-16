@@ -40,24 +40,24 @@ public partial class HudComponent : Control
 	}
 
 
-	public void UpdateAmmoUI()
-	{
+	// public void UpdateAmmoUI()
+	// {
 
 	
-			if (weaponManager.CurrentWeapon != null)
-			{
-				ShootingBar.Value = weaponManager.CurrentWeapon.ShootTimer / weaponManager.CurrentWeapon.ShootCooldown * 100;
-				AmmoCountLabel.Text = $"Weapon: " + weaponManager.CurrentWeapon.AmmoInMagazine + "/" + weaponManager.CurrentWeapon.MagazineSize;
-				AmmoTotalLabel.Text = $"Total Ammo: " + weaponManager.CurrentWeapon.TotalAmmo + "/" + weaponManager.CurrentWeapon.MaxAmmo;
-			}
-			else
-			{
-				AmmoCountLabel.Text = $"Weapon: 0/0";
-				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
-			}
+	// 		if (weaponManager.CurrentWeapon != null)
+	// 		{
+	// 			ShootingBar.Value = weaponManager.CurrentWeapon.ShootTimer / weaponManager.CurrentWeapon.ShootCooldown * 100;
+	// 			AmmoCountLabel.Text = $"Weapon: " + weaponManager.CurrentWeapon.AmmoInMagazine + "/" + weaponManager.CurrentWeapon.MagazineSize;
+	// 			AmmoTotalLabel.Text = $"Total Ammo: " + weaponManager.CurrentWeapon.TotalAmmo + "/" + weaponManager.CurrentWeapon.MaxAmmo;
+	// 		}
+	// 		else
+	// 		{
+	// 			AmmoCountLabel.Text = $"Weapon: 0/0";
+	// 			AmmoTotalLabel.Text = $"Total Ammo: 0/0";
+	// 		}
 		
 		
-	}
+	// }
 
 	public void UpdateHealthUI()
 	{

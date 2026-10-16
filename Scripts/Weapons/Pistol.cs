@@ -10,7 +10,7 @@ private WeaponData weaponData;
 public override void _Ready()
 	{
 
-		weaponData = GetNode<WeaponManager>("res://Scenes/WeaponData.tres");
+		weaponData = GetNode<WeaponData>("res://Scenes/WeaponData.tres");
 		if (weaponData == null)
 		{
 			GD.PrintErr("WeaponData is not assigned!");

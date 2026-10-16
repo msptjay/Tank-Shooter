@@ -20,12 +20,12 @@ public partial class HealthPack : Area3D
 
 	private void OnBodyEntered(Node3D body)
 	{
-		if (body is Player player)
-		{
-			//healthComponent.HealthIncrease(25);
-			GD.Print("Picked up health pack!");
-			QueueFree();
-		}
+		// if (body is Player player)
+		// {
+		// 	//healthComponent.HealthIncrease(25);
+		// 	GD.Print("Picked up health pack!");
+		// 	QueueFree();
+		// }
 		
 	}
 

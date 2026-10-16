@@ -10,12 +10,12 @@ public partial class WeaponManager : Node
 	private Pistol pistol;
 	private MachineGun machineGun;
 
-	private int _totalAmmo;
-	private int _magazineSize = 6;
-	private int _maxAmmo = 60;
-	private int _ammoInMagazine;
-	private float _shootCooldown = 0.5f;
-	private float _shootTimer = 0;
+private int _totalAmmo;
+private int _magazineSize = 6;
+private int _maxAmmo = 60;
+private int _ammoInMagazine;
+private float _shootCooldown = 0.5f;
+private float _shootTimer = 0;
 
 public int AmmoInMagazine => _ammoInMagazine;
 public int TotalAmmo => _totalAmmo;
@@ -25,17 +25,14 @@ public int MaxAmmo => _maxAmmo;
 public float ShootTimer => _shootTimer;
 public float ShootCooldown => _shootCooldown;
 	
+private Marker3D _Muzzle;
 
-	// private Pistol pistol;
-
-	private Marker3D _Muzzle;
-	// private Marker3D gunSpawnPOS;
-	private PackedScene _bullet { get ; set;}
+private PackedScene _bullet { get ; set;}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 
-		_bullet = GD.Load<PackedScene>("res://Scenes/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
+		_bullet = GD.Load<PackedScene>("res://Scenes/Weapons/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
 		_Muzzle = GetNode<Marker3D>("Area3D/POS");
 		
 		_totalAmmo = 10;

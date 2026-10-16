@@ -1,6 +1,0 @@
-[gd_resource type="Resource" format=3 uid="uid://ca5ctc4x8vby6"]
-
-[sub_resource type="CSharpScript" id="CSharpScript_c6qil"]
-
-[resource]
-script = SubResource("CSharpScript_c6qil")

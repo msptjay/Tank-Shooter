@@ -18,12 +18,12 @@ public partial class AmmoPack : Area3D
 
 	private void OnBodyEntered(Node3D body)
 	{
-		if (body is Player player)
-		{
-			player.Pickup(this);
-			GD.Print("Picked up ammo pack!");
-			QueueFree();
-		}
+		// if (body is Player player)
+		// {
+		// 	// player.Pickup(this);
+		// 	// GD.Print("Picked up ammo pack!");
+		// 	// QueueFree();
+		// }
 		
 	}
 
