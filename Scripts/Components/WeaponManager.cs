@@ -9,21 +9,8 @@ public partial class WeaponManager : Node
 	public Node3D CurrentWeapon => currentWeapon;
 	private Pistol pistol;
 	private MachineGun machineGun;
+	private Resource weaponData;
 
-private int _totalAmmo;
-private int _magazineSize = 6;
-private int _maxAmmo = 60;
-private int _ammoInMagazine;
-private float _shootCooldown = 0.5f;
-private float _shootTimer = 0;
-
-public int AmmoInMagazine => _ammoInMagazine;
-public int TotalAmmo => _totalAmmo;
-public int MagazineSize => _magazineSize;
-public int MaxAmmo => _maxAmmo;
-
-public float ShootTimer => _shootTimer;
-public float ShootCooldown => _shootCooldown;
 	
 private Marker3D _Muzzle;
 
@@ -31,12 +18,10 @@ private PackedScene _bullet { get ; set;}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-
+		weaponData = GD.Load("res://Scripts/Weapons/WeaponData.tres");
 		_bullet = GD.Load<PackedScene>("res://Scenes/Weapons/Bullet.tscn"); // bullet var = the Bullet node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player shoots.
 		_Muzzle = GetNode<Marker3D>("Area3D/POS");
 		
-		_totalAmmo = 10;
-		_ammoInMagazine = _magazineSize;
 
 
 		if (_bullet == null)
