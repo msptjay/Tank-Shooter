@@ -4,3 +4,10 @@
 
 [resource]
 script = ExtResource("1_qysw0")
+_weaponName = "Pistol"
+_totalAmmo = 25
+_magazineSize = 6
+_maxAmmo = 60
+_ammoInMagazine = 6
+_shootCooldown = 1.0
+_shootTimer = 1.0

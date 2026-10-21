@@ -5,8 +5,8 @@ public partial class Player : CharacterBody3D
 {
 	enum MovementState {Idle, Walking, Turning, Running}
 	enum AttackState {Idle, Shooting, Stabbing, Reloading}
-	private MovementState _CurrentState = MovementState.Idle;
 	private AttackState _CurrentAttackState = AttackState.Idle;
+	private MovementState _CurrentState = MovementState.Idle;
 	private HudComponent Hud;
 
 	 [Export] 
@@ -39,39 +39,36 @@ public partial class Player : CharacterBody3D
 	public bool Exhaustion => _Exhaustion;
 
 
-
+	private WeaponManager WeaponManager;
 
 	
 	[ExportGroup("Player Bools")]
-	private bool _IsTurning;
+	[Export]private bool _IsTurning;
 
-	private bool IsMoving;
-	private bool _Flipped = false;
+	[Export]private bool IsMoving;
+	[Export]private bool _Flipped = false;
 
 
 	
 
 	private int Score = 0;
 
-	[ExportGroup("Pistol Stats")]
+	// [ExportGroup("Pistol Stats")]
 
 	
-	private PackedScene PistolScene;
-	private PackedScene MachineGunScene;
+	// private PackedScene PistolScene;
+	// private PackedScene MachineGunScene;
 
-	private Pistol pistol;
-	private MachineGun machineGun;
+	// private Pistol pistol;
+	// private MachineGun machineGun;
 
-	private PackedScene Ammo { get; set; }
-	private PackedScene HealthP { get; set; }
-	private PackedScene PistolPack { get; set; }
-
-
+	// private PackedScene Ammo { get; set; }
+	// private PackedScene HealthP { get; set; }
+	// private PackedScene PistolPack { get; set; }
 
 
-
-	private Marker3D gunSpawnPOS;
-	private Marker3D machineSpawnPOS;
+	 public Marker3D gunSpawnPOS;
+	
 	
 	
 
@@ -79,20 +76,20 @@ public partial class Player : CharacterBody3D
 public override void _Ready()
 	{
 
+		// MachineGunScene = GD.Load<PackedScene>("res://Scenes/Weapons/MachineGun.tscn");
+		// PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
+		 gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
+		// machineSpawnPOS = gunSpawnPOS;
 
+		WeaponManager = GetNode<WeaponManager>("WeaponManager");
 		Hud = GetNode<HudComponent>("HudComponent");
-
-		MachineGunScene = GD.Load<PackedScene>("res://Scenes/Weapons/MachineGun.tscn");
-		PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
-		
-
-		gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
-		machineSpawnPOS = gunSpawnPOS;
 		
 		_Stamina = _MaxStamina; //Whatever the max stamina is set to in the inspector will be the starting stamina for the player
 		
 
 	}
+	
+		
 	public void UpdateMovement()
 	{
 		
@@ -143,7 +140,7 @@ public override void _Ready()
 
 	public void UpdateAttack()
 	{
-		if (pistol == null)
+		if (WeaponManager.CurrentWeapon == null)
    	 	{
         _CurrentAttackState = AttackState.Idle;
         return;
@@ -151,8 +148,7 @@ public override void _Ready()
 
 		if (Input.IsActionJustPressed("Reload"))
 		{
-			// pistol.Reload();
-			// Hud.UpdateAmmoUI();
+			
 		}
 
 	
@@ -299,7 +295,7 @@ public override void _Ready()
         }
        MoveAndSlide();
       
-	  if (pistol != null)
+	  if (WeaponManager.CurrentWeapon != null)
 		switch (_CurrentAttackState)
 		{
 			

@@ -3,16 +3,11 @@ using System;
 using System.ComponentModel;
 
 [GlobalClass]
-public partial class WeaponData : Resource
+public partial class WeaponData : Resource 
 {
 
     [ExportGroup("Weapon")]
-    public string _weaponName = "Weapon Name";
-    [ExportGroup("Scenes")]
-    [Export]
-    public PackedScene _weaponEquippedScene;
-    [Export]
-    public PackedScene _weaponPickupScene;
+    [Export]public string _weaponName = "Weapon Name";
 
     [ExportGroup("Ammo")]
     [Export]public int _totalAmmo  {get; set;}
@@ -21,9 +16,13 @@ public partial class WeaponData : Resource
     [Export]public int _ammoInMagazine  {get; set;}
 	[Export]public float _shootCooldown  {get; set;}
 	[Export]public float _shootTimer  {get; set;}
+  
 
-    public WeaponData(int totalAmmo, int magazineSize, int maxAmmo, int ammoInMagazine, float shootCooldown, float shootTimer)
+ 
+
+    public WeaponData(string weaponName, int totalAmmo, int magazineSize, int maxAmmo, int ammoInMagazine, float shootCooldown, float shootTimer)
     {
+        _weaponName = weaponName;
         _totalAmmo = totalAmmo;
         _magazineSize = magazineSize;
         _maxAmmo = maxAmmo;
