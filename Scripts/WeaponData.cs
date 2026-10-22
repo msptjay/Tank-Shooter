@@ -7,29 +7,16 @@ public partial class WeaponData : Resource
 {
 
     [ExportGroup("Weapon")]
-    [Export]public string _weaponName = "Weapon Name";
-
+    [Export]public string weaponName = "Weapon Name";
     [ExportGroup("Ammo")]
-    [Export]public int _totalAmmo  {get; set;}
-    [Export]public int _magazineSize  {get; set;}	
-	[Export]public int _maxAmmo  {get; set;}
-    [Export]public int _ammoInMagazine  {get; set;}
-	[Export]public float _shootCooldown  {get; set;}
-	[Export]public float _shootTimer  {get; set;}
+    [Export]public int magazineSize  {get; set;}	
+    [Export] public int MaxAmmo { get; set; } = 120;
+
+	[Export]public float shootCooldown  {get; set;}
+	
   
 
  
 
-    public WeaponData(string weaponName, int totalAmmo, int magazineSize, int maxAmmo, int ammoInMagazine, float shootCooldown, float shootTimer)
-    {
-        _weaponName = weaponName;
-        _totalAmmo = totalAmmo;
-        _magazineSize = magazineSize;
-        _maxAmmo = maxAmmo;
-        _ammoInMagazine = ammoInMagazine;
-        _shootCooldown = shootCooldown;
-        _shootTimer = shootTimer;
-
-    }
-  
+    
 }

@@ -140,15 +140,17 @@ public override void _Ready()
 
 	public void UpdateAttack()
 	{
-		if (WeaponManager.CurrentWeapon == null)
-   	 	{
-        _CurrentAttackState = AttackState.Idle;
-        return;
-		}
+		if (!WeaponManager.HasWeapon)
+{
+    	_CurrentAttackState = AttackState.Idle;
+   		 return;
+}
 
 		if (Input.IsActionJustPressed("Reload"))
 		{
-			
+		 _CurrentAttackState = AttackState.Reloading;
+        WeaponManager.Reload();
+        return;
 		}
 
 	
@@ -298,11 +300,14 @@ public override void _Ready()
 	  if (WeaponManager.CurrentWeapon != null)
 		switch (_CurrentAttackState)
 		{
-			
-			case AttackState.Shooting:
-				// pistol.Shoot();
-				// Hud.UpdateAmmoUI();
-				break;
+		case AttackState.Shooting:
+        WeaponManager.Shoot();
+        Hud.UpdateAmmoUI();
+        break;
+
+   		case AttackState.Reloading:
+        Hud.UpdateAmmoUI();
+        break;
 		}
 	}
 }

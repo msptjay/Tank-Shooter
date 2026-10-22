@@ -5,6 +5,7 @@ public partial class HealthPack : Area3D
 {
 	public bool monitoring = true;
 	private HealthComponent healthComponent;
+	public PickupManager pickup;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -20,12 +21,12 @@ public partial class HealthPack : Area3D
 
 	private void OnBodyEntered(Node3D body)
 	{
-		// if (body is Player player)
-		// {
-		// 	//healthComponent.HealthIncrease(25);
-		// 	GD.Print("Picked up health pack!");
-		// 	QueueFree();
-		// }
+		if (body is Player player)
+		{
+			healthComponent.HealthIncrease(25);
+			GD.Print("Picked up health pack!");
+			QueueFree();
+		}
 		
 	}
 

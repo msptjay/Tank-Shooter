@@ -44,17 +44,33 @@ public partial class HudComponent : Control
 	{
 
 	
-			if (weaponManager.CurrentWeapon != null)
-			{
-				ShootingBar.Value = weaponManager.CurrentWeapon._shootTimer / weaponManager.CurrentWeapon._shootCooldown * 100;
-				AmmoCountLabel.Text = $"Weapon: " + weaponManager.CurrentWeapon._ammoInMagazine + "/" + weaponManager.CurrentWeapon._magazineSize;
-				AmmoTotalLabel.Text = $"Total Ammo: " + weaponManager.CurrentWeapon._totalAmmo + "/" + weaponManager.CurrentWeapon._maxAmmo;
-			}
-			else
-			{
-				AmmoCountLabel.Text = $"Weapon: 0/0";
-				AmmoTotalLabel.Text = $"Total Ammo: 0/0";
-			}
+		WeaponData weaponData = weaponManager.CurrentWeapon;
+
+    if (weaponData != null)
+    {
+        AmmoCountLabel.Text = $"Weapon: {weaponManager.AmmoInMagazine}/{weaponData.magazineSize}";
+
+        AmmoTotalLabel.Text = $"Total Ammo: {weaponManager.TotalAmmo}/{weaponData.MaxAmmo}";
+
+        if (weaponData.shootCooldown > 0)
+        {
+            ShootingBar.Value = (weaponManager.ShootTimer / weaponData.shootCooldown) * 100f;
+        }
+        else
+        {
+            ShootingBar.Value = 0;
+        }
+
+        CanShootLabel.Text = weaponManager.ShootTimer <= 0
+            ? "Ready to Shoot": "Cooldown";
+    }
+    else
+    {
+        AmmoCountLabel.Text = "Weapon: 0/0";
+        AmmoTotalLabel.Text = "Total Ammo: 0/0";
+        ShootingBar.Value = 0;
+        CanShootLabel.Text = "Unarmed";
+    }
 		
 		
 	}
@@ -90,5 +106,6 @@ public partial class HudComponent : Control
 			
 		}
 		
+		UpdateAmmoUI();
 	}
 }

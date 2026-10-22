@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://c7moy8oam4uk1"]
+
+[ext_resource type="Script" uid="uid://dv8lyvroskgdq" path="res://Scripts/WeaponData.cs" id="1_6rclh"]
+
+[resource]
+script = ExtResource("1_6rclh")
+weaponName = "Machine Gun"
+magazineSize = 30
+shootCooldown = 0.5

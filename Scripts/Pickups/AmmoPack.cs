@@ -4,6 +4,7 @@ using System;
 public partial class AmmoPack : Area3D
 {
 	public bool monitoring = true;
+	public PickupManager pickup;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -18,12 +19,13 @@ public partial class AmmoPack : Area3D
 
 	private void OnBodyEntered(Node3D body)
 	{
-		// if (body is Player player)
-		// {
-		// 	// player.Pickup(this);
-		// 	// GD.Print("Picked up ammo pack!");
-		// 	// QueueFree();
-		// }
+		if (body is Player player)
+		{
+			PickupManager pickupManager = player.GetNode<PickupManager>("PickupManager");
+			pickupManager.Pickup(this);
+			GD.Print("Picked up ammo pack!");
+			QueueFree();
+		}
 		
 	}
 

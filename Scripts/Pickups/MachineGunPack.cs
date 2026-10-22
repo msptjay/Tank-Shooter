@@ -4,6 +4,7 @@ using System;
 public partial class MachineGunPack : Area3D
 {
 	public bool monitoring = true;
+	public PickupManager pickup;
 	public override void _Ready()
 	{
 		BodyEntered += OnBodyEntered;
@@ -17,12 +18,13 @@ public partial class MachineGunPack : Area3D
 
 	private void OnBodyEntered(Node3D body)
 	{
-		// if (body is Player player)
-		// {
-		// 	player.Pickup(this);
-		// 	GD.Print("Picked up machine gun pack!");
-		// 	QueueFree();
-		// }
+		if (body is Player player)
+		{
+			PickupManager pickupManager = player.GetNode<PickupManager>("PickupManager");
+			pickupManager.Pickup(this);
+			GD.Print("Picked up machine gun pack!");
+			QueueFree();
+		}
 		
 	}
 }
