@@ -26,11 +26,14 @@ public partial class WeaponManager : Node
 	public float ShootTimer => currentWeapon?.ShootTimer ?? 0f;
 	private bool hasPistol = false;
 	private bool hasMachineGun = false;
-
+	private Marker3D Muzzle;
 	
+	private PackedScene pistolScene;
+	private Player player;
+	private Node3D pistolModel;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+public override void _Ready()
 	{
 		pistolData = GD.Load<WeaponData>("res://Resources/PistolData.tres");
 
@@ -43,21 +46,53 @@ public partial class WeaponManager : Node
 		if (bulletScene == null)
             GD.PrintErr("Bullet scene is not assigned!");
 
-        if (muzzle == null)
+        if (Muzzle == null)
             GD.PrintErr("Muzzle is not assigned!");
 		// currentWeapon = weaponData;
 		
 		bulletScene = GD.Load<PackedScene>("res://Scenes/Weapons/Bullet.tscn");
-		
+		pistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn");
+		player = GetParent<Player>();
 		pickupManager = GetParent().GetNode<PickupManager>("PickupManager");
 	}
-	private Marker3D muzzle;
-
-	public void SetMuzzle(Marker3D newMuzzle)
+	
+public void SpawnPistol()
 	{
-		muzzle = newMuzzle;
+		if (pistolScene == null)
+		{
+			GD.PrintErr("Could not load Pistol.tscn!");
+			return;
+		}
+
+		if (player == null || this == null)
+		{
+			GD.PrintErr("Player or WeaponManager is missing!");
+			return;
+		}
+
+		pistolModel = pistolScene.Instantiate<Node3D>();
+
+		player.gunSpawnPOS.AddChild(pistolModel);
+
+		// Position the gun relative to GunSpawnPOS.
+		pistolModel.Position = Vector3.Zero;
+		pistolModel.Rotation = Vector3.Zero;
+		pistolModel.Scale = new Vector3(1, 1, 1);
+
+		Marker3D muzzle = pistolModel.GetNodeOrNull<Marker3D>("Area3D/POS");
+
+		if (muzzle == null)
+		{
+			GD.PrintErr("Muzzle marker not found inside Pistol.tscn!");
+			return;
+		}
+
+		Muzzle = muzzle;
+
+		GD.Print("Pistol model spawned!");
 	}
-		public bool PickupPistol()
+	
+public bool PickupPistol()
 		{		
 		if (pistolState == null || hasPistol)
 			return false;
@@ -69,7 +104,7 @@ public partial class WeaponManager : Node
 			return true;
 		}
 
-		public bool PickupMachineGun()
+public bool PickupMachineGun()
 		{
 		if (machineGunState == null || hasMachineGun)
 			return false;
@@ -82,8 +117,17 @@ public partial class WeaponManager : Node
 		return true;
 		}
 
-	private void UpdateCurrentWeapon()
+private void UpdateCurrentWeapon()
 	{
+		if(hasPistol = true || _CurrentWeaponType == WeaponType.Unarmed)
+		{
+			
+		}
+		else
+		{
+			
+		}
+
 		switch (_CurrentWeaponType)
 		{
 			case WeaponType.Pistol:
@@ -92,6 +136,9 @@ public partial class WeaponManager : Node
 
 			case WeaponType.MachineGun:
 				currentWeapon = machineGunState;
+				break;
+			case WeaponType.Unarmed:
+				currentWeapon = null;
 				break;
 
 			default:
@@ -104,13 +151,13 @@ public partial class WeaponManager : Node
 		else
 			GD.Print("Unarmed");
 	}
-	public void AddAmmo(int amount)
+public void AddAmmo(int amount)
 	{
    		if (currentWeapon == null || amount <= 0)
        	 return;
    		currentWeapon.TotalAmmo = Mathf.Min(currentWeapon.TotalAmmo + amount,currentWeapon.Data.MaxAmmo);
 	}
-	public void Reload()
+public void Reload()
 	{	
 		if(currentWeapon == null)
 		return;
@@ -129,7 +176,7 @@ public partial class WeaponManager : Node
         currentWeapon.TotalAmmo -= bulletsToReload;
 	}
 
-	public void Shoot()
+public void Shoot()
 	{
 	if (currentWeapon == null)
 	return;
@@ -146,17 +193,17 @@ public partial class WeaponManager : Node
     currentWeapon.ShootTimer = currentWeapon.Data.shootCooldown;
 		
 	}
-	private bool SpawnBullet()
+private bool SpawnBullet()
 	{
 		if (bulletScene == null)
        	 return false;
 
-   		 if (muzzle == null)
+   		 if (Muzzle == null)
       	  return false;
 		var bulletInstance = bulletScene.Instantiate<Bullet>();
 		GetTree().Root.AddChild(bulletInstance);
-		bulletInstance.GlobalPosition = muzzle.GlobalPosition;
-		bulletInstance.GlobalRotation = muzzle.GlobalRotation;
+		bulletInstance.GlobalPosition = Muzzle.GlobalPosition;
+		bulletInstance.GlobalRotation = Muzzle.GlobalRotation;
 		GD.Print("Shooting!");
 		return true;
 	}
@@ -164,7 +211,7 @@ public partial class WeaponManager : Node
 
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+public override void _Process(double delta)
 	{
 
 		if (currentWeapon != null)

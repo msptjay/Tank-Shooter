@@ -26,41 +26,6 @@ public partial class PickupManager : Node
 		pistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn");
     }
 
-	private void SpawnPistol()
-	{
-		if (pistolScene == null)
-		{
-			GD.PrintErr("Could not load Pistol.tscn!");
-			return;
-		}
-
-		if (player == null || weaponManager == null)
-		{
-			GD.PrintErr("Player or WeaponManager is missing!");
-			return;
-		}
-
-		pistolModel = pistolScene.Instantiate<Node3D>();
-
-		player.gunSpawnPOS.AddChild(pistolModel);
-
-		// Position the gun relative to GunSpawnPOS.
-		pistolModel.Position = Vector3.Zero;
-		pistolModel.Rotation = Vector3.Zero;
-		pistolModel.Scale = new Vector3(1, 1, 1);
-
-		Marker3D muzzle = pistolModel.GetNodeOrNull<Marker3D>("Area3D/POS");
-
-		if (muzzle == null)
-		{
-			GD.PrintErr("Muzzle marker not found inside Pistol.tscn!");
-			return;
-		}
-
-		weaponManager.SetMuzzle(muzzle);
-
-		GD.Print("Pistol model spawned!");
-	}
     public void Pickup(Area3D body)
     {
         // Ammo pickup
@@ -95,7 +60,7 @@ public partial class PickupManager : Node
 		{
 			if (weaponManager.PickupPistol())
 			{
-				SpawnPistol();
+				weaponManager.SpawnPistol();
 				hud.UpdateAmmoUI();
 				body.QueueFree();
 			}

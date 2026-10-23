@@ -3,7 +3,7 @@ using System;
 
 public partial class WeaponState 
 {
-        public WeaponData Data { get; }
+    public WeaponData Data { get; }
 
     public int TotalAmmo { get; set; }
     public int AmmoInMagazine { get; set; }
@@ -12,7 +12,7 @@ public partial class WeaponState
     public WeaponState(WeaponData data)
     {
         Data = data;
-        TotalAmmo = data.MaxAmmo;
+        TotalAmmo = 40;
         AmmoInMagazine = data.magazineSize;
         ShootTimer = 0f;
     }
