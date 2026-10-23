@@ -53,20 +53,6 @@ public partial class Player : CharacterBody3D
 
 	private int Score = 0;
 
-	// [ExportGroup("Pistol Stats")]
-
-	
-	// private PackedScene PistolScene;
-	// private PackedScene MachineGunScene;
-
-	// private Pistol pistol;
-	// private MachineGun machineGun;
-
-	// private PackedScene Ammo { get; set; }
-	// private PackedScene HealthP { get; set; }
-	// private PackedScene PistolPack { get; set; }
-
-
 	 public Marker3D gunSpawnPOS;
 	
 	
