@@ -119,14 +119,15 @@ public bool PickupMachineGun()
 
 private void UpdateCurrentWeapon()
 	{
-		if(hasPistol = true || _CurrentWeaponType == WeaponType.Unarmed)
+		if(pistolModel != null && _CurrentWeaponType == WeaponType.Unarmed)
 		{
-			
+			pistolModel.ProcessMode = ProcessModeEnum.Disabled;
+			pistolModel.Visible = false;
 		}
-		else
-		{
-			
-		}
+		// else
+		// {
+		// 	pistolModel.ProcessMode = ProcessModeEnum.Inherit;
+		// }
 
 		switch (_CurrentWeaponType)
 		{
@@ -228,6 +229,8 @@ public override void _Process(double delta)
 		if (Input.IsActionJustPressed("WeaponSlot2") && hasPistol)
 		{
 		_CurrentWeaponType = WeaponType.Pistol;
+		pistolModel.ProcessMode = ProcessModeEnum.Inherit;
+		pistolModel.Visible = true;
 		UpdateCurrentWeapon();
 		}
 

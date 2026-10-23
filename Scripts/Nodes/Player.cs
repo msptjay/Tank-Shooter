@@ -62,10 +62,7 @@ public partial class Player : CharacterBody3D
 public override void _Ready()
 	{
 
-		// MachineGunScene = GD.Load<PackedScene>("res://Scenes/Weapons/MachineGun.tscn");
-		// PistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn"); // Pistol var = the Pistol node that is loaded in said directory, packed scene loads the scene into memory so it can be instantiated later on when the player picks up a pistol.
-		 gunSpawnPOS = GetNode<Marker3D>("GunSpawnPOS");
-		// machineSpawnPOS = gunSpawnPOS;
+		gunSpawnPOS = GetNode<Marker3D>("GunSpawnOrigin/SpringArm3D/GunSpawnPOS");
 
 		WeaponManager = GetNode<WeaponManager>("WeaponManager");
 		Hud = GetNode<HudComponent>("HudComponent");
@@ -127,10 +124,10 @@ public override void _Ready()
 	public void UpdateAttack()
 	{
 		if (!WeaponManager.HasWeapon)
-{
+		{
     	_CurrentAttackState = AttackState.Idle;
    		 return;
-}
+		}
 
 		if (Input.IsActionJustPressed("Reload"))
 		{
@@ -140,10 +137,14 @@ public override void _Ready()
 		}
 
 	
-    if (Input.IsActionPressed("Aiming") && Input.IsActionJustPressed("Shooting") && !IsMoving)
-    {
-        _CurrentAttackState = AttackState.Shooting;
-    }
+    if (Input.IsActionPressed("Aiming"))
+		{
+
+			if(Input.IsActionJustPressed("Shooting") && !IsMoving)
+			{
+				_CurrentAttackState = AttackState.Shooting;
+			}	
+		}
     else
     {
         _CurrentAttackState = AttackState.Idle;
