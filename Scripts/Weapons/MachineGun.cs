@@ -36,19 +36,19 @@ public partial class MachineGun : Node3D
 
 
 		if (_bullet == null)
-        {
-            GD.PrintErr("Failed to load bullet scene!");
-        }
+		{
+			GD.PrintErr("Failed to load bullet scene!");
+		}
 	}
 
 
 	
 	public void AddAmmo(int amount)
 	{
-    	_totalAmmo += amount;
+		_totalAmmo += amount;
 
-    	if (_totalAmmo > _maxAmmo)
-        	_totalAmmo = _maxAmmo;
+		if (_totalAmmo > _maxAmmo)
+			_totalAmmo = _maxAmmo;
 	}
 	public void Reload()
 	{
@@ -72,18 +72,18 @@ public partial class MachineGun : Node3D
 	{
 		
 	if (_shootTimer > 0)
-        return;
+		return;
 
-    if (_ammoInMagazine <= 0)
-        return;
+	if (_ammoInMagazine <= 0)
+		return;
 	if (!SpawnBullet())
-        return;
+		return;
 
-    _ammoInMagazine--;
+	_ammoInMagazine--;
 
-    SpawnBullet();
+	SpawnBullet();
 
-    _shootTimer = _shootCooldown;
+	_shootTimer = _shootCooldown;
 		
 	}
 	public void AmmoUI()
@@ -93,10 +93,10 @@ public partial class MachineGun : Node3D
 	private bool SpawnBullet()
 	{
 		if (_bullet == null)
-       	 return false;
+	   	 return false;
 
    		 if (_Muzzle == null)
-      	  return false;
+	  	  return false;
 		var bulletInstance = _bullet.Instantiate<Bullet>();
 		GetTree().Root.AddChild(bulletInstance);
 		bulletInstance.GlobalPosition = _Muzzle.GlobalPosition;
@@ -111,11 +111,8 @@ public partial class MachineGun : Node3D
 	public override void _Process(double delta)
 	{
 		 if (_shootTimer > 0)
-        _shootTimer -= (float)delta;
+		_shootTimer -= (float)delta;
 		 if (_shootTimer < 0)
-            _shootTimer = 0;
+			_shootTimer = 0;
 		}
 	}
-
-
-

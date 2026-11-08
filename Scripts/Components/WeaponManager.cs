@@ -29,15 +29,17 @@ public partial class WeaponManager : Node
 	private Marker3D Muzzle;
 	
 	private PackedScene pistolScene;
+	private PackedScene machineGunScene;
 	private Player player;
 	private Node3D pistolModel;
+	private Node3D machineGunModel;
 
 	// Called when the node enters the scene tree for the first time.
 public override void _Ready()
 	{
 		pistolData = GD.Load<WeaponData>("res://Resources/PistolData.tres");
-
    		machineGunData = GD.Load<WeaponData>("res://Resources/MachineGunData.tres" );
+		
 		if (pistolData != null)
         pistolState = new WeaponState(pistolData);
 
@@ -52,6 +54,7 @@ public override void _Ready()
 		
 		bulletScene = GD.Load<PackedScene>("res://Scenes/Weapons/Bullet.tscn");
 		pistolScene = GD.Load<PackedScene>("res://Scenes/Weapons/Pistol.tscn");
+		machineGunScene = GD.Load<PackedScene>("res://Scenes/Weapons/MachineGun.tscn");
 		player = GetParent<Player>();
 		pickupManager = GetParent().GetNode<PickupManager>("PickupManager");
 	}
@@ -91,6 +94,41 @@ public void SpawnPistol()
 
 		GD.Print("Pistol model spawned!");
 	}
+	public void SpawnMachineGun()
+	{
+		if (machineGunScene == null)
+		{
+			GD.PrintErr("Could not load MachineGun.tscn!");
+			return;
+		}
+
+		if (player == null || this == null)
+		{
+			GD.PrintErr("Player or WeaponManager is missing!");
+			return;
+		}
+
+		machineGunModel = machineGunScene.Instantiate<Node3D>();
+
+		player.gunSpawnPOS.AddChild(machineGunModel);
+
+		// Position the gun relative to GunSpawnPOS.
+		machineGunModel.Position = Vector3.Zero;
+		machineGunModel.Rotation = Vector3.Zero;
+		machineGunModel.Scale = new Vector3(1, 1, 1);
+
+		Marker3D muzzle = machineGunModel.GetNodeOrNull<Marker3D>("Area3D/POS");
+
+		if (muzzle == null)
+		{
+			GD.PrintErr("Muzzle marker not found inside MachineGun.tscn!");
+			return;
+		}
+
+		Muzzle = muzzle;
+
+		GD.Print("Machine gun model spawned!");
+	}
 	
 public bool PickupPistol()
 		{		
@@ -119,15 +157,17 @@ public bool PickupMachineGun()
 
 private void UpdateCurrentWeapon()
 	{
-		if(pistolModel != null && _CurrentWeaponType == WeaponType.Unarmed)
+		if(pistolModel != null && _CurrentWeaponType != WeaponType.Pistol)
 		{
 			pistolModel.ProcessMode = ProcessModeEnum.Disabled;
 			pistolModel.Visible = false;
 		}
-		// else
-		// {
-		// 	pistolModel.ProcessMode = ProcessModeEnum.Inherit;
-		// }
+		
+		if(machineGunModel != null && _CurrentWeaponType != WeaponType.MachineGun)
+		{
+			machineGunModel.ProcessMode = ProcessModeEnum.Disabled;
+			machineGunModel.Visible = false;
+		}
 
 		switch (_CurrentWeaponType)
 		{
@@ -237,6 +277,8 @@ public override void _Process(double delta)
 		if (Input.IsActionJustPressed("WeaponSlot3") && hasMachineGun)
 		{
 		_CurrentWeaponType = WeaponType.MachineGun;
+		machineGunModel.ProcessMode = ProcessModeEnum.Inherit;
+		machineGunModel.Visible = true;
 		UpdateCurrentWeapon();
 		}
 	}

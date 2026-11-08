@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cwali74ra3pai" path="res://Scenes/Pickups/AmmoPack.tscn" id="2_qxrlw"]
 [ext_resource type="PackedScene" uid="uid://bsvjgi5ihcdw3" path="res://Scenes/Pickups/HealthPack.tscn" id="3_wrm1d"]
 [ext_resource type="PackedScene" uid="uid://c4qnn30lqurqt" path="res://Scenes/Pickups/PistolPack.tscn" id="4_3dryh"]
+[ext_resource type="PackedScene" uid="uid://w6ut08wlvu02" path="res://Scenes/Pickups/MachineGunPack.tscn" id="5_ne6wh"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_26iok"]
 
@@ -84,3 +85,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.61267, -0.850484, -6.385845
 
 [node name="PistolPack" parent="StaticBody3D" unique_id=626678748 instance=ExtResource("4_3dryh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21776485, -1.055999, -7.2333837)
+
+[node name="PistolPack" parent="." unique_id=1883721888 instance=ExtResource("5_ne6wh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.162335, 1.4065006, -8.468329)
