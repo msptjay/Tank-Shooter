@@ -26,20 +26,26 @@ public partial class WeaponManager : Node
 	public float ShootTimer => currentWeapon?.ShootTimer ?? 0f;
 	private bool hasPistol = false;
 	private bool hasMachineGun = false;
-	private Marker3D Muzzle;
-	
 	private PackedScene pistolScene;
 	private PackedScene machineGunScene;
 	private Player player;
 	private Node3D pistolModel;
 	private Node3D machineGunModel;
+	private Marker3D pistolMuzzle;
+	private Marker3D machineGunMuzzle;
+	private Marker3D Muzzle => _CurrentWeaponType switch
+		{
+			WeaponType.Pistol => pistolMuzzle,
+			WeaponType.MachineGun => machineGunMuzzle,_ => null
+		};
 
 	// Called when the node enters the scene tree for the first time.
 public override void _Ready()
 	{
+		
 		pistolData = GD.Load<WeaponData>("res://Resources/PistolData.tres");
    		machineGunData = GD.Load<WeaponData>("res://Resources/MachineGunData.tres" );
-		
+
 		if (pistolData != null)
         pistolState = new WeaponState(pistolData);
 
@@ -90,7 +96,8 @@ public void SpawnPistol()
 			return;
 		}
 
-		Muzzle = muzzle;
+		pistolMuzzle = muzzle;
+		muzzle = Muzzle;
 
 		GD.Print("Pistol model spawned!");
 	}
@@ -125,7 +132,8 @@ public void SpawnPistol()
 			return;
 		}
 
-		Muzzle = muzzle;
+		machineGunMuzzle = muzzle;
+		muzzle = Muzzle;
 
 		GD.Print("Machine gun model spawned!");
 	}
@@ -150,7 +158,6 @@ public bool PickupMachineGun()
 		hasMachineGun = true;
 		_CurrentWeaponType = WeaponType.MachineGun;
 		UpdateCurrentWeapon();
-
 		GD.Print("Machine gun picked up!");
 		return true;
 		}
@@ -239,7 +246,7 @@ private bool SpawnBullet()
 		if (bulletScene == null)
        	 return false;
 
-   		 if (Muzzle == null)
+   		if (Muzzle == null)
       	  return false;
 		var bulletInstance = bulletScene.Instantiate<Bullet>();
 		GetTree().Root.AddChild(bulletInstance);

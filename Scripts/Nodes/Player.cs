@@ -53,7 +53,7 @@ public partial class Player : CharacterBody3D
 
 	private int Score = 0;
 
-	 public Marker3D gunSpawnPOS;
+	public Marker3D gunSpawnPOS;
 	
 	
 	

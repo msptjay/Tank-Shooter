@@ -73,6 +73,7 @@ public partial class PickupManager : Node
         {
             if (weaponManager.PickupMachineGun())
             {
+                weaponManager.SpawnMachineGun();
                 hud.UpdateAmmoUI();
                 body.QueueFree();
             }
