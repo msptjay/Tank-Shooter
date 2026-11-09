@@ -97,7 +97,7 @@ public void SpawnPistol()
 		}
 
 		pistolMuzzle = muzzle;
-		muzzle = Muzzle;
+		// muzzle = Muzzle;
 
 		GD.Print("Pistol model spawned!");
 	}
@@ -133,7 +133,7 @@ public void SpawnPistol()
 		}
 
 		machineGunMuzzle = muzzle;
-		muzzle = Muzzle;
+		// muzzle = Muzzle;
 
 		GD.Print("Machine gun model spawned!");
 	}
@@ -229,12 +229,12 @@ public void Shoot()
 	if (currentWeapon == null)
 	return;
 	if (currentWeapon.ShootTimer > 0)
-        return;
+    return;
 
     if (currentWeapon.AmmoInMagazine <= 0)
-        return;
+    return;
 	if (!SpawnBullet())
-        return;
+    return;
 
     currentWeapon.AmmoInMagazine--;
 

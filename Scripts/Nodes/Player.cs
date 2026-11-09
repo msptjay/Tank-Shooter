@@ -144,6 +144,10 @@ public override void _Ready()
 			{
 				_CurrentAttackState = AttackState.Shooting;
 			}	
+			else
+			{
+				_CurrentAttackState = AttackState.Idle;
+			}
 		}
     else
     {

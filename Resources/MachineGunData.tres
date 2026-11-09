@@ -6,4 +6,4 @@
 script = ExtResource("1_6rclh")
 weaponName = "Machine Gun"
 magazineSize = 30
-shootCooldown = 0.5
+shootCooldown = 0.25
